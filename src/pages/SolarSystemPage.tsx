@@ -1,142 +1,137 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sparkles, Star, Lock, Play, Users } from "lucide-react";
+import { Sparkles, Star, Lock, Play, Users, X, Info } from "lucide-react";
+import toast from "react-hot-toast";
 
 const MISSIONS = [
-  { id: "1", name: "Mercury Outpost", level: "Beginner", status: "completed", color: "#FDE68A" },
-  { id: "2", name: "Venus Vault", level: "Beginner", status: "active", color: "#F97316" },
-  { id: "3", name: "Earth Station", level: "Intermediate", status: "locked", color: "#3B82F6" },
-  { id: "4", name: "Mars Mine", level: "Intermediate", status: "locked", color: "#EF4444" },
-  { id: "5", name: "Jupiter Junction", level: "Advanced", status: "locked", color: "#A855F7" },
-  { id: "6", name: "Saturn Sphere", level: "Advanced", status: "locked", color: "#F59E0B" },
+  { id: "1", name: "Mercury Outpost", level: "Beginner", task: "Frequency Filter", status: "completed", color: "#FDE68A" },
+  { id: "2", name: "Venus Station", level: "Intermediate", task: "Mirror Letter Logic", status: "unlocked", color: "#F97316" },
+  { id: "3", name: "Earth Base", level: "Intermediate", task: "Vowel Vortex", status: "unlocked", color: "#3B82F6" },
+  { id: "4", name: "Mars Ruins", level: "Advanced", task: "Syllable Sniper", status: "unlocked", color: "#EF4444" },
+  { id: "5", name: "Jupiter Storm", level: "Expert", task: "Context Navigator", status: "unlocked", color: "#A855F7" },
+  { id: "6", name: "Neptune Abyss", level: "Master", task: "Phonological Core", status: "unlocked", color: "#6366F1" },
 ];
 
 export const SolarSystemPage = () => {
+  const [isSquadOpen, setIsSquadOpen] = useState(false);
+
   return (
-    <div className="relative min-h-screen bg-[#0D0B1E] overflow-x-hidden pt-10 pb-32">
-      {/* Cosmic Background Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              opacity: [0.2, 0.5, 0.2],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: Math.random() * 3 + 2,
-              repeat: Infinity,
-            }}
-            className="absolute rounded-full bg-white"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 3}px`,
-              height: `${Math.random() * 3}px`,
-            }}
-          />
-        ))}
-      </div>
+    <div className="flex flex-col gap-8 p-6 pt-12 pb-32 min-h-screen bg-transparent overflow-y-auto">
+      <header>
+        <h1 className="text-4xl font-black text-white leading-tight">Reading Expedition</h1>
+        <p className="text-slate-400 font-bold">All sectors are open for exploration</p>
+      </header>
 
-      <div className="px-6 relative z-10">
-        <header className="mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#A855F7]/20 px-4 py-1.5 backdrop-blur-md mb-4 border border-[#A855F7]/30">
-            <Sparkles className="w-4 h-4 text-yellow-300" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">The Reading Galaxy</span>
-          </div>
-          <h1 className="text-4xl font-black text-white leading-tight">Your Expedition</h1>
-          <p className="text-slate-400 mt-2 font-medium">Unlock planets by completing reading missions!</p>
-        </header>
+      <div className="relative flex flex-col gap-12">
+        {/* Central Sun */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-[radial-gradient(circle_at_center,#6C63FF22_0%,transparent_70%)] pointer-events-none" />
 
-        <div className="flex flex-col items-center gap-20">
-          {MISSIONS.map((mission, index) => {
-            const isEven = index % 2 === 0;
-            const isActive = mission.status === "active";
-            const isCompleted = mission.status === "completed";
-            const isLocked = mission.status === "locked";
-
-            return (
-              <div key={mission.id} className={`flex w-full ${isEven ? "justify-start" : "justify-end"} relative`}>
-                {/* Connecting Line */}
-                {index < MISSIONS.length - 1 && (
-                  <div 
-                    className="absolute top-full left-1/2 w-0.5 h-20 bg-gradient-to-b from-white/10 to-white/5 -translate-x-1/2" 
-                    style={{ transform: `translateX(${isEven ? "-40px" : "40px"}) rotate(${isEven ? "-25deg" : "25deg"})`, top: '80%' }}
-                  />
-                )}
-
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className={`relative group ${isLocked ? "opacity-50" : "opacity-100"}`}
-                >
-                  {/* Planet Core */}
-                  <Link to={isLocked ? "#" : `/lesson/${mission.id}`}>
-                    <div 
-                      className="w-32 h-32 rounded-full flex items-center justify-center relative z-10 transition-transform group-active:scale-95"
-                      style={{ 
-                        background: `radial-gradient(circle at 30% 30%, ${mission.color}, ${mission.color}88)`,
-                        boxShadow: `0 0 40px ${mission.color}44, inset -10px -10px 20px rgba(0,0,0,0.5)`
-                      }}
-                    >
-                      {isLocked ? (
-                        <Lock className="w-8 h-8 text-white/50" />
-                      ) : isCompleted ? (
-                        <Star className="w-10 h-10 text-white fill-current" />
-                      ) : (
-                        <Play className="w-10 h-10 text-white fill-current" />
-                      )}
-
-                      {/* Orbit Ring */}
-                      <div className="absolute inset-[-10px] border border-white/10 rounded-full animate-[spin_10s_linear_infinite]" />
-                    </div>
-                  </Link>
-
-                  {/* Label */}
-                  <div className={`absolute top-1/2 -translate-y-1/2 ${isEven ? "left-36" : "right-36"} w-40`}>
-                    <h3 className="text-xl font-black text-white">{mission.name}</h3>
-                    <p className="text-[10px] font-bold text-[#43CBFF] uppercase tracking-widest">{mission.level}</p>
-                    {isActive && (
-                      <div className="mt-2 inline-flex items-center gap-1 rounded-md bg-yellow-400 px-2 py-0.5 text-[10px] font-black text-slate-900">
-                        ACTIVE MISSION
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
+        <div className="grid grid-cols-1 gap-6 relative z-10">
+          {MISSIONS.map((m, i) => (
+            <motion.div
+              key={m.id}
+              initial={{ x: i % 2 === 0 ? -50 : 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-[#16132F]/80 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/5 relative group overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-30 transition">
+                <Star className="w-16 h-16" style={{ color: m.color }} />
               </div>
-            );
-          })}
+
+              <div className="flex items-center gap-6">
+                <div 
+                  className="w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl relative"
+                  style={{ backgroundColor: `${m.color}22`, border: `2px solid ${m.color}` }}
+                >
+                  <span className="text-2xl">{i + 1}</span>
+                  {m.status === "completed" && (
+                    <div className="absolute -top-2 -right-2 bg-[#43E97B] rounded-full p-1 shadow-lg">
+                      <Sparkles className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-white">{m.name}</h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{m.level}</span>
+                    <div className="w-1 h-1 bg-white/20 rounded-full" />
+                    <span className="text-[10px] font-black text-[#43CBFF] uppercase tracking-widest">{m.task}</span>
+                  </div>
+                </div>
+              </div>
+
+              <Link 
+                to={`/lesson/${m.id}`}
+                className="mt-8 w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition"
+              >
+                LAUNCH MISSION <Play className="w-4 h-4 fill-current" />
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
         {/* Multi-Player Co-op Quests */}
-        <section className="mt-32 p-10 rounded-[3rem] bg-[linear-gradient(135deg,#1E1B4B_0%,#0F0D29_100%)] border border-white/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-10 opacity-5"><Users className="w-40 h-40" /></div>
+        <section className="mt-12 p-10 rounded-[3.5rem] bg-[linear-gradient(135deg,#1E1B4B_0%,#0F0D29_100%)] border border-white/5 relative overflow-hidden">
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#43CBFF]/10 px-4 py-1.5 mb-6 border border-[#43CBFF]/20">
               <Users className="w-4 h-4 text-[#43CBFF]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">Multi-Player Quests</span>
             </div>
             <h2 className="text-3xl font-black text-white mb-4">Join Your Squad</h2>
-            <p className="text-slate-400 font-bold mb-10 max-w-sm">Work together with Class 4B to unlock the Andromeda Gate!</p>
+            <p className="text-slate-400 font-bold mb-10 max-w-sm">Collaborative missions are now active! Work with friends to unlock the Omega Gate.</p>
             
-            <div className="flex -space-x-4 mb-10">
-              {["🦁", "🦊", "🐼", "🐨", "🐸"].map((emoji, i) => (
-                <div key={i} className="w-14 h-14 rounded-full border-4 border-[#0F0D29] bg-white/5 flex items-center justify-center text-2xl shadow-xl relative group">
-                  {emoji}
-                  <div className="absolute -bottom-2 bg-[#43CBFF] px-2 py-0.5 rounded text-[8px] font-black text-slate-900 opacity-0 group-hover:opacity-100 transition">ON MARS</div>
-                </div>
-              ))}
-              <div className="w-14 h-14 rounded-full border-4 border-[#0F0D29] bg-white/10 backdrop-blur-md flex items-center justify-center text-xs font-black text-white">
-                +12
-              </div>
-            </div>
-
-            <button className="w-full py-6 rounded-[2rem] bg-white text-slate-900 font-black text-lg shadow-2xl hover:scale-105 transition active:scale-95">
+            <button 
+              onClick={() => setIsSquadOpen(true)}
+              className="w-full py-6 rounded-[2.5rem] bg-white text-slate-900 font-black text-lg shadow-2xl hover:scale-105 transition active:scale-95"
+            >
               START CO-OP MISSION
             </button>
           </div>
         </section>
       </div>
+
+      {/* Co-op Squad Overlay */}
+      <AnimatePresence>
+        {isSquadOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[300] bg-[#0D0B1E] p-8 flex flex-col">
+            <header className="flex justify-between items-center mb-12">
+              <h2 className="text-3xl font-black text-white">Squad Terminal</h2>
+              <button onClick={() => setIsSquadOpen(false)} className="p-3 bg-white/5 rounded-full"><X className="w-6 h-6 text-white" /></button>
+            </header>
+
+            <div className="flex-1 flex flex-col items-center justify-center text-center">
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} className="w-48 h-48 border-4 border-dashed border-[#6C63FF]/30 rounded-full flex items-center justify-center mb-12">
+                <Users className="w-16 h-16 text-[#6C63FF]" />
+              </motion.div>
+              <h3 className="text-3xl font-black text-white mb-4">Searching for Squad...</h3>
+              <p className="text-slate-500 font-bold mb-12">3 friends are online and ready to join.</p>
+              
+              <div className="flex -space-x-4 mb-12">
+                {["🦁", "🦊", "🐨"].map((emoji, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ scale: 0 }} 
+                    animate={{ scale: 1 }} 
+                    transition={{ delay: i * 0.2 }}
+                    className="w-16 h-16 rounded-full border-4 border-[#0D0B1E] bg-[#16132F] flex items-center justify-center text-2xl shadow-2xl"
+                  >
+                    {emoji}
+                  </motion.div>
+                ))}
+              </div>
+
+              <button 
+                onClick={() => { toast.success("Mission Launching!"); setIsSquadOpen(false); }}
+                className="w-full max-w-xs py-6 bg-[#6C63FF] text-white rounded-[2rem] font-black text-xl shadow-xl animate-pulse"
+              >
+                DEPLOY SQUAD
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
