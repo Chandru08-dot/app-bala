@@ -140,7 +140,7 @@ export const LessonPage = () => {
                 </div>
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Difficulty</p>
-                  <p className="text-xl font-black text-[#43CBFF]">{lesson.level || "Easy"}</p>
+                  <p className="text-xl font-black text-[#43CBFF]">{lesson.difficulty_level || "Easy"}</p>
                 </div>
               </div>
             </div>
