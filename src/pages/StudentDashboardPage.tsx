@@ -1,140 +1,112 @@
-import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
-  TrendingUp, 
-  Activity, 
-  Clock, 
-  Award, 
-  ChevronRight, 
-  Play,
-  CheckCircle2,
-  AlertCircle
+  Zap, Star, Flame, Check, ChevronRight, Volume2, Users, Target, Activity, Layout, ShoppingBag, Award, Search, Sparkles
 } from "lucide-react";
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
-
-const PERFORMANCE_DATA = [
-  { day: 'Mon', wpm: 45, accuracy: 82 },
-  { day: 'Tue', wpm: 48, accuracy: 85 },
-  { day: 'Wed', wpm: 42, accuracy: 80 },
-  { day: 'Thu', wpm: 52, accuracy: 88 },
-  { day: 'Fri', wpm: 55, accuracy: 92 },
-  { day: 'Sat', wpm: 58, accuracy: 90 },
-  { day: 'Sun', wpm: 62, accuracy: 94 },
-];
+import toast from "react-hot-toast";
 
 export const StudentDashboardPage = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col gap-8 p-6 pt-12 pb-32 bg-slate-50 min-h-screen">
-      {/* Profile Header */}
+    <div className="flex flex-col gap-12 p-8 pt-16 pb-40 min-h-screen bg-transparent">
+      {/* Cinematic Profile Header */}
       <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-[900] text-slate-900 tracking-tight">Student Hub</h1>
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">Alex Johnson • Grade 4</p>
-        </div>
-        <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm border border-blue-200">
-          <Award className="w-6 h-6" />
+        <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
+          <h1 className="text-5xl font-[900] text-white leading-[1.1] mb-2 uppercase italic tracking-tighter">
+            Hi, <br/> <span className="text-[#43CBFF]">Alex!</span> 👋
+          </h1>
+          <p className="text-slate-400 font-bold text-lg">Your legacy begins today.</p>
+        </motion.div>
+        <div className="relative group cursor-pointer" onClick={() => toast("Profile Level: God Mode Active")}>
+          <div className="w-24 h-24 rounded-[2.5rem] bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] flex items-center justify-center text-5xl shadow-[0_20px_50px_rgba(108,99,255,0.4)] group-hover:scale-110 transition duration-500">
+            🐿️
+          </div>
+          <div className="absolute -top-2 -right-2 w-8 h-8 bg-rose-500 rounded-full border-4 border-[#0D0B1E] flex items-center justify-center shadow-xl">
+            <span className="text-xs font-black text-white">1</span>
+          </div>
         </div>
       </header>
 
-      {/* Quick Diagnostic Status */}
-      <section className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500">
-            <CheckCircle2 className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="font-black text-slate-900">Diagnostic Status</h3>
-            <p className="text-xs font-bold text-slate-400">Next Assessment: 12 May</p>
-          </div>
-        </div>
-        <div className="flex justify-between items-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
-          <div className="text-center flex-1">
-            <p className="text-xs font-black text-slate-400 uppercase">Fluency</p>
-            <p className="text-lg font-black text-slate-900">High</p>
-          </div>
-          <div className="w-px h-8 bg-slate-200" />
-          <div className="text-center flex-1">
-            <p className="text-xs font-black text-slate-400 uppercase">Phonemes</p>
-            <p className="text-lg font-black text-slate-900">88%</p>
-          </div>
-          <div className="w-px h-8 bg-slate-200" />
-          <div className="text-center flex-1">
-            <p className="text-xs font-black text-slate-400 uppercase">Focus</p>
-            <p className="text-lg font-black text-slate-900">92%</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Accuracy Analytics */}
-      <section className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="font-black text-slate-900 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-blue-500" /> Accuracy Trend
-          </h3>
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">7 Day Metrics</span>
-        </div>
-        <div className="h-48 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={PERFORMANCE_DATA}>
-              <defs>
-                <linearGradient id="colorAcc" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <Area type="monotone" dataKey="accuracy" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorAcc)" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
-
-      {/* Recommended Session */}
-      <section className="relative">
+      {/* Extreme Stats Bar */}
+      <div className="grid grid-cols-2 gap-6">
         <motion.div 
+          whileHover={{ y: -5 }}
+          className="bg-[#16132F]/90 backdrop-blur-xl rounded-[3rem] p-8 border-2 border-white/5 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10"><Zap className="w-16 h-16 text-[#43CBFF]" /></div>
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Total XP</p>
+          <p className="text-4xl font-[900] text-white tracking-tighter italic">10.8K</p>
+          <div className="h-2 w-full bg-white/5 rounded-full mt-6 overflow-hidden">
+            <motion.div initial={{ width: 0 }} animate={{ width: '70%' }} className="h-full bg-[#43CBFF] shadow-[0_0_15px_rgba(67,203,255,0.8)]" />
+          </div>
+        </motion.div>
+        <motion.div 
+          whileHover={{ y: -5 }}
+          className="bg-[#16132F]/90 backdrop-blur-xl rounded-[3rem] p-8 border-2 border-white/5 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10"><Star className="w-16 h-16 text-yellow-400" /></div>
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Rank</p>
+          <p className="text-4xl font-[900] text-white tracking-tighter italic">#3</p>
+          <p className="text-[10px] font-black text-[#43E97B] mt-4 uppercase tracking-widest">Global Elite</p>
+        </motion.div>
+      </div>
+
+      {/* Massive Active Mission Card */}
+      <section className="relative">
+        <div className="flex justify-between items-center mb-6 px-2">
+          <h2 className="text-2xl font-[900] text-white uppercase italic tracking-tight">Active Mission</h2>
+          <Link to="/expedition" className="text-xs font-black text-[#6C63FF] uppercase tracking-widest">See All</Link>
+        </div>
+        <motion.div 
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="bg-blue-600 rounded-[3rem] p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden group cursor-pointer"
+          onClick={() => navigate("/expedition")}
+          className="bg-[linear-gradient(135deg,#6C63FF_0%,#A855F7_100%)] rounded-[4rem] p-10 shadow-[0_30px_60px_rgba(108,99,255,0.4)] relative overflow-hidden group cursor-pointer"
         >
           <div className="relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 opacity-80">Recommended Session</p>
-            <h3 className="text-4xl font-[900] mb-2 italic tracking-tighter">Vowel <br/> Mastering</h3>
-            <p className="text-blue-100 font-bold mb-10 text-lg opacity-90">Targeting 'ou' and 'ow' sounds</p>
-            
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 mb-6 backdrop-blur-md">
+              <Sparkles className="w-4 h-4 text-white" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white">Priority Mission</span>
+            </div>
+            <h3 className="text-5xl font-[900] text-white mb-4 uppercase italic tracking-tighter leading-none">The Mars <br/> Vault</h3>
+            <p className="text-white/80 font-bold mb-10 text-lg">Target: Syllable Slicing Accuracy</p>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-md">
-                <Clock className="w-4 h-4" />
-                <span className="text-xs font-black uppercase">12 MINS</span>
+              <div className="flex -space-x-4">
+                {["🐨", "🦁", "🦊", "🐼"].map((e, i) => (
+                  <div key={i} className="w-12 h-12 rounded-full border-4 border-[#6C63FF] bg-slate-800 flex items-center justify-center text-xl shadow-xl">
+                    {e}
+                  </div>
+                ))}
               </div>
-              <div className="bg-white text-blue-600 px-10 py-5 rounded-[2rem] font-black text-lg flex items-center gap-3 shadow-2xl group-hover:px-12 transition-all">
-                START <Play className="w-6 h-6 fill-current" />
+              <div className="bg-white text-slate-900 px-10 py-5 rounded-[2rem] font-[900] text-lg flex items-center gap-3 shadow-2xl group-hover:px-12 transition-all">
+                RESUME <ChevronRight className="w-6 h-6 stroke-[3]" />
               </div>
             </div>
           </div>
-          <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-white/10 rounded-full blur-[80px]" />
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-[100px] pointer-events-none" />
         </motion.div>
       </section>
 
-      {/* Recent Difficulties */}
-      <section className="bg-rose-50 rounded-[2.5rem] p-8 border border-rose-100">
-        <div className="flex items-center gap-3 mb-6 text-rose-600">
-          <AlertCircle className="w-6 h-6" />
-          <h3 className="font-black text-lg">Focus Areas</h3>
+      {/* Word of the Day - Cinematic Edition */}
+      <section className="bg-[#16132F]/90 backdrop-blur-2xl rounded-[4rem] p-10 border-2 border-white/5 relative overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-60 h-60 bg-[#43CBFF]/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-12 h-12 bg-[#43CBFF]/20 rounded-2xl flex items-center justify-center text-[#43CBFF]">
+            <Target className="w-6 h-6" />
+          </div>
+          <h3 className="text-xl font-black text-white uppercase tracking-tight">Sonic Focus</h3>
         </div>
-        <div className="space-y-4">
-          {["Pneumonia", "Beautiful", "Knowledge"].map((word, i) => (
-            <div key={i} className="flex justify-between items-center bg-white rounded-2xl p-4 border border-rose-100 shadow-sm">
-              <span className="font-black text-slate-800">{word}</span>
-              <ChevronRight className="w-5 h-5 text-rose-300" />
-            </div>
-          ))}
-        </div>
+        <h2 className="text-6xl font-[900] text-white mb-4 tracking-tighter uppercase italic text-[#43CBFF]">Euphoria</h2>
+        <p className="text-slate-400 font-bold mb-10 leading-relaxed text-lg">
+          A state of intense excitement and happiness. Master this sound to unlock the next sector.
+        </p>
+        <button 
+          onClick={() => toast.success("Recording Voice Telemetry...")}
+          className="w-full bg-white/5 hover:bg-white/10 py-6 rounded-[2rem] border-2 border-white/10 font-black text-white flex items-center justify-center gap-3 transition-all active:scale-95"
+        >
+          <Volume2 className="w-6 h-6 text-[#43CBFF]" /> PRACTICE ENUNCIATION
+        </button>
       </section>
     </div>
   );

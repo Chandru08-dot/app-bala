@@ -27,7 +27,6 @@ import { TeacherDashboardPage } from "./pages/TeacherDashboardPage";
 import { CosmicBackground } from "./components/CosmicBackground";
 import { DyslexiaToolbar } from "./components/DyslexiaToolbar";
 import { useSettings } from "./stores/settingsStore";
-import { StudentDashboardPage } from "./pages/StudentDashboardPage";
 import { HallOfFamePage } from "./pages/HallOfFamePage";
 
 const AppShell = () => {
@@ -36,11 +35,13 @@ const AppShell = () => {
   const { fontFamily, letterSpacing, lineHeight } = useSettings();
 
   useEffect(() => {
+    // Mobile Voice Engine Warmup
     const unlockAudio = () => {
       const utterance = new SpeechSynthesisUtterance("");
       utterance.volume = 0;
       window.speechSynthesis.speak(utterance);
       window.removeEventListener('click', unlockAudio);
+      console.log("Audio Engine Unlocked for Mobile");
     };
     window.addEventListener('click', unlockAudio);
     return () => window.removeEventListener('click', unlockAudio);
@@ -48,30 +49,50 @@ const AppShell = () => {
 
   return (
     <div 
-      className={`flex min-h-screen justify-center transition-all duration-300 bg-slate-50 ${fontFamily === 'OpenDyslexic' ? 'dyslexia-mode' : ''}`}
+      className={`flex min-h-screen justify-center transition-all duration-300 ${fontFamily === 'OpenDyslexic' ? 'dyslexia-mode' : ''}`}
       style={{ 
         letterSpacing: `${letterSpacing}px`,
         lineHeight: lineHeight
       }}
     >
+      <CosmicBackground />
       <DyslexiaToolbar />
       {/* Mobile Frame Container */}
-      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden bg-white shadow-2xl z-10 border-x border-slate-200">
+      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden bg-[#0D0B1E]/90 shadow-[0_0_100px_rgba(0,0,0,0.5)] z-10">
         <main className={`flex-1 ${!isLessonRoute ? "pb-24" : ""}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="min-h-full"
             >
               <Routes location={location}>
-                <Route path="/dashboard" element={<StudentDashboardPage />} />
-                <Route path="/diagnostic" element={<DiagnosticPage />} />
-                <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/expedition" element={<SolarSystemPage />} />
+                <Route path="/achievements" element={<AchievementsPage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/telemetry" element={<MissionControlPage />} />
+                <Route path="/training" element={<PhonemeTrainingPage />} />
+                <Route path="/games" element={<GamesHubPage />} />
+                <Route path="/community" element={<CommunityPage />} />
+                <Route path="/inbox" element={<InboxPage />} />
+                <Route path="/flashcards" element={<FlashcardPage />} />
+                <Route path="/fame" element={<HallOfFamePage />} />
+                <Route path="/certificates" element={<ReadingCertificatesPage />} />
                 <Route path="/parent" element={<ParentDashboardPage />} />
+                <Route path="/teacher" element={<TeacherDashboardPage />} />
+                <Route path="/diagnostic" element={<DiagnosticPage />} />
+                <Route path="/upload" element={<UploadPage />} />
+                <Route path="/upload-new" element={<UploadPage />} />
+                <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                <Route path="/students/:studentId" element={<StudentDetailPage />} />
+                <Route path="/quests" element={<DashboardPage />} />
+                <Route path="/profile" element={<DashboardPage />} />
+                <Route path="/settings" element={<DashboardPage />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Routes>
             </motion.div>

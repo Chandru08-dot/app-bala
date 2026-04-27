@@ -1,53 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: #f8fafc; /* Slate 50 */
-    --foreground: #0f172a; /* Slate 900 */
-    --primary: #3b82f6; /* Blue 500 */
-    --secondary: #64748b; /* Slate 500 */
-    --accent: #f1f5f9; /* Slate 100 */
-    --soft-blue: #e0f2fe; /* Blue 100 */
-  }
-
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: 'Lexend', sans-serif;
-  }
+:root {
+  --color-bg-dark: #0D0B1E;
+  --color-bg-card: #16132F;
+  --color-primary: #6C63FF;
+  --color-secondary: #43CBFF;
+  --color-accent: #A855F7;
+  --color-text: #FFFFFF;
+  --color-text-muted: #94A3B8;
+  
+  color: var(--color-text);
+  background-color: #020617; /* Deepest blue for desktop background */
+  font-family: 'Inter', sans-serif;
 }
 
 .dyslexia-mode {
-  word-spacing: 0.2em;
-  line-height: 2;
-  letter-spacing: 0.05em;
+  font-family: 'Lexend', sans-serif !important;
+  word-spacing: 0.12em !important;
+  line-height: 1.8 !important;
 }
 
-.bionic-reading {
-  font-weight: 500;
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Outfit', sans-serif;
 }
 
-.bionic-reading b {
-  font-weight: 900;
-  color: var(--foreground);
+.dyslexia-mode h1, 
+.dyslexia-mode h2, 
+.dyslexia-mode h3, 
+.dyslexia-mode h4, 
+.dyslexia-mode h5, 
+.dyslexia-mode h6 {
+  font-family: 'Lexend', sans-serif !important;
 }
 
-/* Draggable Reading Ruler Overlay */
-.reading-ruler {
-  position: fixed;
-  height: 40px;
-  background: rgba(59, 130, 246, 0.2);
-  border-top: 2px solid #3b82f6;
-  border-bottom: 2px solid #3b82f6;
-  pointer-events: none;
-  z-index: 100;
-  width: 100%;
+body {
+  margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.8);
+/* Custom Scrollbar for Mobile Container */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(22, 19, 47, 0.7);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Cosmic Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
