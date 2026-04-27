@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,11 +9,12 @@
   --color-bg-card: #16132F;
   --color-primary: #6C63FF;
   --color-secondary: #43CBFF;
+  --color-accent: #A855F7;
   --color-text: #FFFFFF;
   --color-text-muted: #94A3B8;
   
   color: var(--color-text);
-  background-color: var(--color-bg-dark);
+  background-color: #020617; /* Deepest blue for desktop background */
   font-family: 'Inter', sans-serif;
 }
 
@@ -21,43 +22,40 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: 'Outfit', sans-serif;
 }
 
-html {
-  background: var(--color-bg-dark);
-}
-
 body {
   margin: 0;
-  min-width: 320px;
   min-height: 100vh;
-  background: transparent;
-  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
+/* Custom Scrollbar for Mobile Container */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
-#root {
-  min-height: 100vh;
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(22, 19, 47, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Cosmic Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(108, 99, 255, 0.5);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(108, 99, 255, 0.8);
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }

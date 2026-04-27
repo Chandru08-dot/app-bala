@@ -1,209 +1,288 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { MOCK_LESSONS } from "../data/mockData";
-import { PlayCircle, Square, Award } from "lucide-react";
+import { X, Play, Square, Award, Sparkles, ChevronRight, Settings, Type, AlignLeft } from "lucide-react";
+import { useVoiceAnalysis } from "../hooks/useVoiceAnalysis";
+import { SquirrelGuide } from "../components/SquirrelGuide";
+import { useSettings } from "../stores/settingsStore";
 
 export const LessonPage = () => {
   const { lessonId } = useParams();
-  
-  // Use mock data directly
   const lesson = MOCK_LESSONS.find((l) => l.id === lessonId) || MOCK_LESSONS[0];
+  
+  const [phase, setPhase] = useState<"landing" | "active" | "report">("landing");
+  const [showSettings, setShowSettings] = useState(false);
+  
+  const { 
+    fontSize, setFontSize,
+    lineHeight, setLineHeight,
+    letterSpacing, setLetterSpacing
+  } = useSettings();
+
+  const { 
+    isRecording, 
+    currentWordIndex, 
+    startRecording, 
+    stopRecording, 
+    words,
+    error 
+  } = useVoiceAnalysis(lesson.content);
+
   const paragraphs = lesson.content.split(/(?<=[.!?])\s+/).filter(Boolean);
-  
-  const [phase, setPhase] = useState<"landing" | "active" | "processing" | "report">("landing");
-  const [activeWordIndex, setActiveWordIndex] = useState(0);
-  const [isReading, setIsReading] = useState(false);
-  
-  const words = lesson.content.split(/\s+/).filter(Boolean);
 
-  const startTest = () => {
+  const handleStart = () => {
     setPhase("active");
-    setIsReading(true);
-    setActiveWordIndex(0);
-    toast("Reading session started!");
+    startRecording();
+    toast.success("Ready? Start reading out loud!");
   };
 
-  const stopTest = () => {
-    setIsReading(false);
-    setPhase("processing");
-    
-    // Simulate processing delay
-    setTimeout(() => {
-      setPhase("report");
-    }, 2500);
+  const handleFinish = () => {
+    stopRecording();
+    setPhase("report");
   };
 
-  // Simulate auto-pacer for demo purposes
   useEffect(() => {
-    if (phase !== "active" || !isReading) return;
-    
-    const interval = setInterval(() => {
-      setActiveWordIndex((prev) => {
-        if (prev >= words.length - 1) {
-          stopTest();
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 400); // ~150 WPM
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
-    return () => clearInterval(interval);
-  }, [phase, isReading, words.length]);
+  const getSquirrelMessage = () => {
+    if (phase === "landing") return "Welcome back, Explorer! Ready to conquer this mission?";
+    if (phase === "active") {
+      if (currentWordIndex === -1) return "I'm listening! Start whenever you're ready.";
+      if (currentWordIndex > words.length * 0.8) return "Almost there! You're doing amazing!";
+      return "Keep going! You're reading beautifully.";
+    }
+    return "WOW! Look at those scores! You're a reading superstar!";
+  };
 
   return (
-    <div className="space-y-8">
-      {phase === "landing" && (
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-[3rem] bg-[linear-gradient(140deg,#6C63FF_0%,#43CBFF_100%)] p-12 text-white shadow-2xl relative"
-        >
-          <div className="relative z-10 text-center max-w-3xl mx-auto">
-            <h1 className="text-5xl font-extrabold leading-tight">
-              {lesson.title}
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/90">
-              {lesson.description}
-            </p>
-            <div className="mt-10 flex justify-center gap-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={startTest}
-                className="flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-bold text-[#6C63FF] shadow-xl transition"
-              >
-                <PlayCircle className="w-6 h-6" />
-                Start Reading
-              </motion.button>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur transition hover:bg-white/20"
-              >
-                Back
-              </Link>
-            </div>
-          </div>
-        </motion.section>
-      )}
+    <div className="min-h-screen bg-[#0D0B1E] text-white flex flex-col overflow-hidden relative">
+      <SquirrelGuide message={getSquirrelMessage()} />
 
-      {phase === "active" && (
-        <section className="fixed inset-0 z-30 flex flex-col bg-[#0D0B1E]">
-          <header className="flex flex-col items-center justify-between gap-4 border-b border-white/5 bg-[#16132F]/80 px-6 py-5 backdrop-blur-xl sm:flex-row sm:px-8">
-            <div className="flex items-center gap-4">
+      <AnimatePresence>
+        {showSettings && (
+          <motion.div 
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            className="fixed inset-x-0 bottom-0 z-[60] bg-[#16132F] rounded-t-[3rem] p-8 border-t border-white/10 shadow-2xl"
+          >
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-xl font-black">Reading Settings</h3>
+              <button onClick={() => setShowSettings(false)} className="p-2 rounded-full bg-white/5"><X className="w-5 h-5" /></button>
+            </div>
+            
+            <div className="space-y-8">
               <div>
-                <h2 className="text-xl font-bold text-white">{lesson.title}</h2>
-                <p className="text-sm font-medium tracking-wide text-[#43CBFF]">
-                  Reading Session Active
-                </p>
+                <div className="flex justify-between mb-4">
+                  <span className="text-sm font-bold text-slate-400">Font Size</span>
+                  <span className="text-sm font-black text-[#43CBFF]">{fontSize}px</span>
+                </div>
+                <input 
+                  type="range" min="16" max="42" value={fontSize} 
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                  className="w-full accent-[#43CBFF]"
+                />
+              </div>
+              <div>
+                <div className="flex justify-between mb-4">
+                  <span className="text-sm font-bold text-slate-400">Line Spacing</span>
+                  <span className="text-sm font-black text-[#43CBFF]">{lineHeight}x</span>
+                </div>
+                <input 
+                  type="range" min="1.2" max="3" step="0.1" value={lineHeight} 
+                  onChange={(e) => setLineHeight(parseFloat(e.target.value))}
+                  className="w-full accent-[#43CBFF]"
+                />
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={stopTest}
-                className="flex items-center gap-2 rounded-full bg-rose-500/20 text-rose-500 border border-rose-500/50 px-6 py-2.5 font-bold transition hover:bg-rose-500 hover:text-white"
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {phase === "landing" && (
+          <motion.div 
+            key="landing"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex-1 flex flex-col p-6 pt-12"
+          >
+            <div className="flex justify-between items-center mb-8">
+              <Link to="/expedition" className="p-2 rounded-full bg-white/5 border border-white/10">
+                <X className="w-6 h-6" />
+              </Link>
+              <button 
+                onClick={() => setShowSettings(true)}
+                className="p-2 rounded-full bg-white/5 border border-white/10"
               >
-                <Square className="w-4 h-4 fill-current" /> Finish
+                <Settings className="w-6 h-6" />
               </button>
             </div>
-          </header>
 
-          <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 py-8 sm:px-6">
-            <div className="relative my-auto w-full max-w-5xl rounded-[3.5rem] border border-white/10 bg-[#16132F] px-10 py-20 shadow-2xl sm:px-24 sm:py-32 shrink-0">
-              <div className="mx-auto w-full text-center">
-                <div className="space-y-14 text-[clamp(1.5rem,2.5vw+1rem,2.8rem)] font-medium leading-[2.5] tracking-wide text-white">
-                  {(() => {
-                    let globalWordIndex = 0;
-                    return paragraphs.map((paragraph, pIndex) => (
-                      <p key={pIndex} className="mx-auto text-slate-300">
-                        {paragraph.split(/\s+/).filter(Boolean).map((word) => {
-                          const currentIndex = globalWordIndex++;
-                          const isActive = activeWordIndex === currentIndex;
-                          const isPassed = activeWordIndex > currentIndex;
-
-                          return (
-                            <span
-                              key={currentIndex}
-                              className={`inline rounded-2xl px-2.5 py-1.5 transition-all duration-300 ${
-                                isActive
-                                  ? "bg-[#6C63FF]/20 text-[#43CBFF] shadow-[0_4px_12px_rgba(67,203,255,0.15)] ring-1 ring-[#43CBFF]/50 font-bold"
-                                  : isPassed
-                                  ? "text-white opacity-80"
-                                  : "text-slate-500"
-                              }`}
-                            >
-                              {word}{" "}
-                            </span>
-                          );
-                        })}
-                      </p>
-                    ));
-                  })()}
+            <div className="flex-1 flex flex-col justify-center items-center text-center">
+              <div className="w-24 h-24 rounded-3xl bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] flex items-center justify-center shadow-2xl mb-8">
+                <Sparkles className="w-12 h-12 text-white" />
+              </div>
+              <h1 className="text-3xl font-black mb-4 leading-tight">{lesson.title}</h1>
+              <p className="text-slate-400 text-lg mb-10 px-4">{lesson.description}</p>
+              
+              <div className="grid grid-cols-2 gap-4 w-full max-w-xs mb-12">
+                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">XP Reward</p>
+                  <p className="text-xl font-black text-yellow-400">+500</p>
+                </div>
+                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Difficulty</p>
+                  <p className="text-xl font-black text-[#43CBFF]">{lesson.level || "Easy"}</p>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
 
-      {phase === "processing" && (
-        <section className="flex min-h-[72vh] items-center justify-center">
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-xl rounded-[3rem] border border-white/10 bg-[#16132F]/80 p-12 text-center shadow-2xl backdrop-blur-xl"
-          >
-            <h2 className="text-4xl font-extrabold text-white">Analyzing Session...</h2>
-            <p className="mt-4 text-lg text-slate-400">Calculating speed and accuracy</p>
-            <div className="mt-10 h-4 overflow-hidden rounded-full bg-white/5">
-              <motion.div
-                className="h-full rounded-full bg-[linear-gradient(90deg,#6C63FF_0%,#43CBFF_100%)]"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ ease: "easeInOut", duration: 2.5 }}
-              />
-            </div>
-          </motion.div>
-        </section>
-      )}
-
-      {phase === "report" && (
-        <motion.section 
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="w-full max-w-4xl mx-auto rounded-[3rem] border border-white/10 bg-[#16132F]/80 p-12 shadow-2xl backdrop-blur-xl"
-        >
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#43E97B]/20 text-[#43E97B] mb-6 shadow-[0_0_30px_rgba(67,233,123,0.3)]">
-              <Award className="w-10 h-10" />
-            </div>
-            <h2 className="text-4xl font-extrabold text-white">Session Complete!</h2>
-            <p className="mt-4 text-lg text-slate-400">Here's how you did on "{lesson.title}"</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6 mb-10">
-            <div className="rounded-[2rem] bg-[#1E1B4B] p-8 text-center border border-white/5">
-              <p className="text-sm font-bold uppercase tracking-widest text-[#43CBFF]">Accuracy</p>
-              <p className="mt-4 text-5xl font-black text-[#43E97B]">94%</p>
-            </div>
-            <div className="rounded-[2rem] bg-[#1E1B4B] p-8 text-center border border-white/5">
-              <p className="text-sm font-bold uppercase tracking-widest text-[#43CBFF]">Speed</p>
-              <p className="mt-4 text-5xl font-black text-white">142 <span className="text-2xl text-slate-500">WPM</span></p>
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Link
-              to="/dashboard"
-              className="rounded-full bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] px-10 py-5 text-lg font-bold text-white shadow-xl transition hover:scale-105"
+            <button
+              onClick={handleStart}
+              className="w-full bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] py-6 rounded-[2rem] text-xl font-black shadow-[0_10px_30px_rgba(108,99,255,0.4)] transition active:scale-95 mb-8"
             >
-              Back to Dashboard
+              START MISSION
+            </button>
+          </motion.div>
+        )}
+
+        {phase === "active" && (
+          <motion.div 
+            key="active"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col"
+          >
+            <header className="px-6 py-6 border-b border-white/5 flex items-center justify-between backdrop-blur-xl bg-[#16132F]/50">
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => setShowSettings(true)}
+                  className="p-2 rounded-full bg-white/5 border border-white/10"
+                >
+                  <Type className="w-4 h-4 text-[#43CBFF]" />
+                </button>
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-widest text-[#43CBFF]">Mission Active</h2>
+                  <p className="text-xs text-slate-400 truncate max-w-[150px]">{lesson.title}</p>
+                </div>
+              </div>
+              <button 
+                onClick={handleFinish}
+                className="p-3 rounded-full bg-rose-500/20 text-rose-500 border border-rose-500/30"
+              >
+                <Square className="w-5 h-5 fill-current" />
+              </button>
+            </header>
+
+            <div className="flex-1 overflow-y-auto px-6 py-10 space-y-12">
+              <div 
+                className="space-y-8 font-medium tracking-wide"
+                style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
+              >
+                {(() => {
+                  let globalWordIndex = 0;
+                  return paragraphs.map((paragraph, pIndex) => (
+                    <p key={pIndex} className="text-slate-300">
+                      {paragraph.split(/\s+/).filter(Boolean).map((word) => {
+                        const currentIndex = globalWordIndex++;
+                        const isActive = currentWordIndex === currentIndex;
+                        const isPassed = currentWordIndex > currentIndex;
+
+                        return (
+                          <motion.span
+                            key={currentIndex}
+                            animate={isActive ? { scale: 1.1 } : { scale: 1 }}
+                            className={`inline-block rounded-lg px-1 transition-all duration-300 ${
+                              isActive
+                                ? "bg-[#43CBFF] text-slate-900 font-black shadow-[0_0_15px_#43CBFF]"
+                                : isPassed
+                                ? "text-white/40"
+                                : "text-white"
+                            }`}
+                          >
+                            {word}{" "}
+                          </motion.span>
+                        );
+                      })}
+                    </p>
+                  ));
+                })()}
+              </div>
+            </div>
+
+            <footer className="p-6 bg-[#16132F]/80 border-t border-white/5 backdrop-blur-xl">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Progress</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">
+                  {Math.round(((currentWordIndex + 1) / words.length) * 100)}%
+                </span>
+              </div>
+              <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-[#43CBFF]"
+                  animate={{ width: `${((currentWordIndex + 1) / words.length) * 100}%` }}
+                />
+              </div>
+            </footer>
+          </motion.div>
+        )}
+
+        {phase === "report" && (
+          <motion.div 
+            key="report"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex-1 flex flex-col p-6 pt-12"
+          >
+            <div className="flex-1 flex flex-col items-center text-center">
+              <div className="w-24 h-24 rounded-full bg-yellow-400/20 flex items-center justify-center shadow-[0_0_50px_rgba(250,204,21,0.2)] mb-8 border border-yellow-400/30">
+                <Award className="w-12 h-12 text-yellow-400" />
+              </div>
+              <h2 className="text-3xl font-black mb-2">Mission Complete!</h2>
+              <p className="text-slate-400 mb-10">You've reached a new reading milestone.</p>
+
+              <div className="w-full grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-[#1E1B4B] rounded-3xl p-6 border border-white/5">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Accuracy</p>
+                  <p className="text-4xl font-black text-[#43E97B]">94%</p>
+                </div>
+                <div className="bg-[#1E1B4B] rounded-3xl p-6 border border-white/5">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Speed</p>
+                  <p className="text-4xl font-black text-white">128</p>
+                  <p className="text-[10px] font-bold text-slate-500">WPM</p>
+                </div>
+              </div>
+
+              <div className="w-full bg-[#1E1B4B] rounded-3xl p-6 border border-white/5 mb-8">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Focus Area</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {["Phonemes", "Diphthongs", "Fluidity"].map(tag => (
+                    <span key={tag} className="px-3 py-1 bg-white/5 rounded-full text-xs font-bold text-white/70 border border-white/10">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/expedition"
+              className="w-full bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] py-6 rounded-[2rem] text-xl font-black text-center shadow-[0_10px_30px_rgba(108,99,255,0.4)] mb-8"
+            >
+              CONTINUE EXPEDITION
             </Link>
-          </div>
-        </motion.section>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
