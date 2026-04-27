@@ -16,28 +16,28 @@ export const SquirrelGuide: React.FC<SquirrelGuideProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, x: 100, y: 50, scale: 0.5 }}
-          animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-          exit={{ opacity: 0, x: 100, scale: 0.5 }}
-          className="fixed bottom-8 right-8 z-50 flex items-end gap-4"
+          initial={{ opacity: 0, x: 50, scale: 0.5 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: 50, scale: 0.5 }}
+          className="fixed bottom-32 right-4 z-50 flex flex-col items-end gap-2"
         >
           {/* Speech Bubble */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative mb-12 max-w-xs rounded-3xl bg-white p-6 text-slate-800 shadow-2xl"
+            className="relative max-w-[180px] rounded-2xl bg-white p-4 text-slate-800 shadow-2xl border-2 border-[#6C63FF]/20"
           >
-            <p className="text-lg font-bold leading-tight">{message}</p>
+            <p className="text-xs font-black leading-tight">{message}</p>
             {/* Bubble Tail */}
-            <div className="absolute -bottom-2 right-8 h-4 w-4 rotate-45 bg-white" />
+            <div className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 bg-white border-r-2 border-b-2 border-[#6C63FF]/20" />
           </motion.div>
 
           {/* Squirrel Character */}
-          <div className="relative h-48 w-48">
+          <div className="relative h-28 w-28">
             <motion.div
               animate={{
-                y: [0, -10, 0],
-                rotate: isHappy ? [0, 2, -2, 0] : 0
+                y: [0, -5, 0],
+                rotate: isHappy ? [0, 1, -1, 0] : 0
               }}
               transition={{
                 duration: 2,
