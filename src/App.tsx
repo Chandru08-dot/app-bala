@@ -22,15 +22,17 @@ import { VocabularyGardenPage } from "./pages/VocabularyGardenPage";
 import { ReadingCertificatesPage } from "./pages/ReadingCertificatesPage";
 import { ParentDashboardPage } from "./pages/ParentDashboardPage";
 import { TeacherDashboardPage } from "./pages/TeacherDashboardPage";
+import { CosmicBackground } from "./components/CosmicBackground";
 
 const AppShell = () => {
   const location = useLocation();
   const isLessonRoute = location.pathname.startsWith("/lesson/");
 
   return (
-    <div className="flex min-h-screen justify-center bg-slate-950">
+    <div className="flex min-h-screen justify-center">
+      <CosmicBackground />
       {/* Mobile Frame Container */}
-      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden bg-[#0D0B1E] shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden bg-[#0D0B1E]/90 shadow-[0_0_100px_rgba(0,0,0,0.5)] z-10">
         <main className={`flex-1 ${!isLessonRoute ? "pb-24" : ""}`}>
           <Routes>
             <Route path="/dashboard" element={<DashboardPage />} />

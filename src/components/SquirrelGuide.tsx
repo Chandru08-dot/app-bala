@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, X } from "lucide-react";
 
 interface SquirrelGuideProps {
   message: string;
@@ -12,89 +13,59 @@ export const SquirrelGuide: React.FC<SquirrelGuideProps> = ({
   isHappy = true, 
   isVisible = true 
 }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, x: 50, scale: 0.5 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: 50, scale: 0.5 }}
-          className="fixed bottom-32 right-4 z-50 flex flex-col items-end gap-2"
+          layout
+          className="fixed bottom-32 right-6 z-[100] flex flex-col items-end gap-3"
         >
-          {/* Speech Bubble */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative max-w-[180px] rounded-2xl bg-white p-4 text-slate-800 shadow-2xl border-2 border-[#6C63FF]/20"
-          >
-            <p className="text-xs font-black leading-tight">{message}</p>
-            {/* Bubble Tail */}
-            <div className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 bg-white border-r-2 border-b-2 border-[#6C63FF]/20" />
-          </motion.div>
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5, y: 20 }}
+                className="relative max-w-[220px] rounded-[2rem] bg-white p-6 text-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-[#6C63FF]/30"
+              >
+                <button 
+                  onClick={() => setIsExpanded(false)}
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center text-white shadow-lg"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+                <p className="text-xs font-black leading-tight mb-2 text-[#6C63FF] uppercase tracking-widest">Guide Tip</p>
+                <p className="text-sm font-bold leading-tight">{message}</p>
+                {/* Bubble Tail */}
+                <div className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 bg-white border-r-2 border-b-2 border-[#6C63FF]/30" />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {/* Squirrel Character */}
-          <div className="relative h-28 w-28">
-            <motion.div
-              animate={{
-                y: [0, -5, 0],
-                rotate: isHappy ? [0, 1, -1, 0] : 0
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="h-full w-full"
-            >
-              <svg viewBox="0 0 200 200" className="h-full w-full drop-shadow-2xl">
-                {/* Tail */}
-                <motion.path
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  d="M160,140 C190,100 180,40 130,30 C100,25 90,60 110,80"
-                  fill="none"
-                  stroke="#D97706"
-                  strokeWidth="24"
-                  strokeLinecap="round"
-                />
-                {/* Body */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={`relative group ${isExpanded ? "w-20 h-20" : "w-16 h-16"}`}
+          >
+            {!isExpanded && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#6C63FF] rounded-full flex items-center justify-center animate-bounce z-10">
+                <MessageCircle className="w-3 h-3 text-white" />
+              </div>
+            )}
+            <div className="w-full h-full bg-[#16132F] rounded-full border-2 border-[#6C63FF]/50 p-1 overflow-hidden shadow-2xl">
+              <svg viewBox="0 0 200 200" className="w-full h-full">
                 <ellipse cx="100" cy="120" rx="45" ry="55" fill="#B45309" />
-                {/* Head */}
                 <circle cx="100" cy="70" r="35" fill="#B45309" />
-                {/* Ears */}
-                <path d="M75,45 L65,15 L90,35 Z" fill="#92400E" />
-                <path d="M125,45 L135,15 L110,35 Z" fill="#92400E" />
-                {/* Eyes */}
-                <motion.circle 
-                  animate={{ scaleY: [1, 1, 0.1, 1, 1] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  cx="85" cy="65" r="4" fill="black" 
-                />
-                <motion.circle 
-                  animate={{ scaleY: [1, 1, 0.1, 1, 1] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  cx="115" cy="65" r="4" fill="black" 
-                />
-                {/* Nose/Muzzle */}
+                <circle cx="85" cy="65" r="4" fill="black" />
+                <circle cx="115" cy="65" r="4" fill="black" />
                 <circle cx="100" cy="80" r="8" fill="#FDE68A" />
                 <circle cx="100" cy="78" r="3" fill="#000" />
-                {/* Hands */}
-                <circle cx="70" cy="120" r="8" fill="#92400E" />
-                <circle cx="130" cy="120" r="8" fill="#92400E" />
-                {/* Acorn */}
-                {isHappy && (
-                  <motion.g
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="origin-center"
-                  >
-                    <path d="M90,115 C90,130 110,130 110,115 L110,110 L90,110 Z" fill="#78350F" />
-                    <rect x="88" y="105" width="24" height="6" rx="3" fill="#A16207" />
-                  </motion.g>
-                )}
               </svg>
-            </motion.div>
-          </div>
+            </div>
+          </motion.button>
         </motion.div>
       )}
     </AnimatePresence>
