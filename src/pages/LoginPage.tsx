@@ -5,28 +5,34 @@ import { motion } from "framer-motion";
 
 import { authStore } from "../stores/authStore";
 import { MOCK_USERS } from "../data/mockData";
+import { BiometricSplash } from "../components/BiometricSplash";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("student@test.com");
   const storeLogin = authStore((state) => state.login);
   const [isPending, setIsPending] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsPending(true);
 
-    // Simulate network delay
     setTimeout(() => {
       setIsPending(false);
-      const isTeacher = email.includes("teacher");
-      const user = isTeacher ? MOCK_USERS.teacher : MOCK_USERS.student;
-      
-      storeLogin(user);
-      toast.success("Welcome back!");
-      navigate("/dashboard");
+      setShowSplash(true);
     }, 800);
   };
+
+  const onSplashComplete = () => {
+    const isTeacher = email.includes("teacher");
+    const user = isTeacher ? MOCK_USERS.teacher : MOCK_USERS.student;
+    storeLogin(user);
+    toast.success("Welcome back!");
+    navigate("/dashboard");
+  };
+
+  if (showSplash) return <BiometricSplash onComplete={onSplashComplete} />;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(180deg,#0D0B1E_0%,#1E1B4B_100%)] px-4 py-12">

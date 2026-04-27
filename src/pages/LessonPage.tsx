@@ -65,7 +65,7 @@ export const LessonPage = () => {
   return (
     <div className={`min-h-screen transition-colors duration-700 ${isZenMode ? "bg-[#05040a]" : "bg-[#0D0B1E]"} text-white flex flex-col overflow-hidden relative`}>
       <AnimatePresence>
-        {!isZenMode && <SquirrelGuide message={getSquirrelMessage()} />}
+        {!isZenMode && <SquirrelGuide />}
       </AnimatePresence>
 
       <AnimatePresence>

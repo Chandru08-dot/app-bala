@@ -1,73 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Volume2, Sparkles } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
-interface SquirrelGuideProps {
-  message: string;
-  isHappy?: boolean;
-  isVisible?: boolean;
-}
+export const SquirrelGuide = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-export const SquirrelGuide: React.FC<SquirrelGuideProps> = ({ 
-  message, 
-  isHappy = true, 
-  isVisible = true 
-}) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const getPageSummary = () => {
+    switch (location.pathname) {
+      case "/dashboard": return "Welcome back, Explorer! Your Mars mission is ready. Let's practice some tricky words!";
+      case "/expedition": return "The solar system is full of challenges. Pick a planet to start your reading adventure!";
+      case "/games": return "Neural training time! Choose a game to sharpen your phonics skills.";
+      case "/fame": return "Look at those trophies! You're becoming a legendary reader.";
+      case "/flashcards": return "Time to master these 25 tricky words. Tap the volume button to hear them!";
+      case "/parent": return "Hi! This is the command center for parents. Check out Leo's amazing progress.";
+      default: return "I'm here to help you on your reading journey! What should we do next?";
+    }
+  };
+
+  const speakSummary = () => {
+    const summary = getPageSummary();
+    const utterance = new SpeechSynthesisUtterance(summary);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.3; // Squeaky squirrel voice
+    window.speechSynthesis.cancel(); // Stop any current speech
+    window.speechSynthesis.speak(utterance);
+    toast("Reading page overview...", { icon: "🐿️" });
+  };
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          layout
-          className="fixed bottom-32 right-6 z-[100] flex flex-col items-end gap-3"
-        >
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.5, y: 20 }}
-                className="relative max-w-[220px] rounded-[2rem] bg-white p-6 text-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-[#6C63FF]/30"
-              >
-                <button 
-                  onClick={() => setIsExpanded(false)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center text-white shadow-lg"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-                <p className="text-xs font-black leading-tight mb-2 text-[#6C63FF] uppercase tracking-widest">Guide Tip</p>
-                <p className="text-sm font-bold leading-tight">{message}</p>
-                {/* Bubble Tail */}
-                <div className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 bg-white border-r-2 border-b-2 border-[#6C63FF]/30" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`relative group ${isExpanded ? "w-20 h-20" : "w-16 h-16"}`}
+    <div className="fixed bottom-24 right-6 z-[400]">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            className="mb-4 w-64 rounded-[2.5rem] bg-white p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-4 border-[#6C63FF] relative"
           >
-            {!isExpanded && (
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#6C63FF] rounded-full flex items-center justify-center animate-bounce z-10">
-                <MessageCircle className="w-3 h-3 text-white" />
-              </div>
-            )}
-            <div className="w-full h-full bg-[#16132F] rounded-full border-2 border-[#6C63FF]/50 p-1 overflow-hidden shadow-2xl">
-              <svg viewBox="0 0 200 200" className="w-full h-full">
-                <ellipse cx="100" cy="120" rx="45" ry="55" fill="#B45309" />
-                <circle cx="100" cy="70" r="35" fill="#B45309" />
-                <circle cx="85" cy="65" r="4" fill="black" />
-                <circle cx="115" cy="65" r="4" fill="black" />
-                <circle cx="100" cy="80" r="8" fill="#FDE68A" />
-                <circle cx="100" cy="78" r="3" fill="#000" />
-              </svg>
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-t-4 border-l-4 border-[#6C63FF] rotate-45" />
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-[10px] font-black text-[#6C63FF] uppercase tracking-[0.2em]">Neural Guide</span>
+              <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
             </div>
-          </motion.button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <p className="text-sm font-[900] text-slate-800 leading-relaxed mb-8">
+              {getPageSummary()}
+            </p>
+            <button 
+              onClick={speakSummary}
+              className="w-full py-4 bg-[#6C63FF] text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg active:scale-95 transition"
+            >
+              <Volume2 className="w-4 h-4" /> Listen to Guide
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        animate={{ 
+          y: [0, -10, 0],
+          boxShadow: ["0 0 0px rgba(108,99,255,0)", "0 0 30px rgba(108,99,255,0.4)", "0 0 0px rgba(108,99,255,0)"] 
+        }}
+        transition={{ duration: 3, repeat: Infinity }}
+        onClick={() => setIsOpen(!isOpen)}
+        className="h-24 w-24 rounded-[2.5rem] bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] flex items-center justify-center text-5xl shadow-2xl border-4 border-white/20 relative"
+      >
+        🐿️
+        <div className="absolute -top-2 -right-2">
+          <motion.div 
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="bg-yellow-400 p-2 rounded-full shadow-lg"
+          >
+            <Sparkles className="w-4 h-4 text-slate-900" />
+          </motion.div>
+        </div>
+      </motion.button>
+    </div>
   );
 };

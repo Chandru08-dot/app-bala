@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -32,6 +33,19 @@ const AppShell = () => {
   const location = useLocation();
   const isLessonRoute = location.pathname.startsWith("/lesson/");
   const { fontFamily, letterSpacing, lineHeight } = useSettings();
+
+  useEffect(() => {
+    // Mobile Voice Engine Warmup
+    const unlockAudio = () => {
+      const utterance = new SpeechSynthesisUtterance("");
+      utterance.volume = 0;
+      window.speechSynthesis.speak(utterance);
+      window.removeEventListener('click', unlockAudio);
+      console.log("Audio Engine Unlocked for Mobile");
+    };
+    window.addEventListener('click', unlockAudio);
+    return () => window.removeEventListener('click', unlockAudio);
+  }, []);
 
   return (
     <div 
