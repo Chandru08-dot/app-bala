@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sparkles, Star, Lock, Play } from "lucide-react";
+import { Sparkles, Star, Lock, Play, Users } from "lucide-react";
 
 const MISSIONS = [
   { id: "1", name: "Mercury Outpost", level: "Beginner", status: "completed", color: "#FDE68A" },
@@ -107,6 +107,35 @@ export const SolarSystemPage = () => {
             );
           })}
         </div>
+
+        {/* Multi-Player Co-op Quests */}
+        <section className="mt-32 p-10 rounded-[3rem] bg-[linear-gradient(135deg,#1E1B4B_0%,#0F0D29_100%)] border border-white/5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-10 opacity-5"><Users className="w-40 h-40" /></div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#43CBFF]/10 px-4 py-1.5 mb-6 border border-[#43CBFF]/20">
+              <Users className="w-4 h-4 text-[#43CBFF]" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">Multi-Player Quests</span>
+            </div>
+            <h2 className="text-3xl font-black text-white mb-4">Join Your Squad</h2>
+            <p className="text-slate-400 font-bold mb-10 max-w-sm">Work together with Class 4B to unlock the Andromeda Gate!</p>
+            
+            <div className="flex -space-x-4 mb-10">
+              {["🦁", "🦊", "🐼", "🐨", "🐸"].map((emoji, i) => (
+                <div key={i} className="w-14 h-14 rounded-full border-4 border-[#0F0D29] bg-white/5 flex items-center justify-center text-2xl shadow-xl relative group">
+                  {emoji}
+                  <div className="absolute -bottom-2 bg-[#43CBFF] px-2 py-0.5 rounded text-[8px] font-black text-slate-900 opacity-0 group-hover:opacity-100 transition">ON MARS</div>
+                </div>
+              ))}
+              <div className="w-14 h-14 rounded-full border-4 border-[#0F0D29] bg-white/10 backdrop-blur-md flex items-center justify-center text-xs font-black text-white">
+                +12
+              </div>
+            </div>
+
+            <button className="w-full py-6 rounded-[2rem] bg-white text-slate-900 font-black text-lg shadow-2xl hover:scale-105 transition active:scale-95">
+              START CO-OP MISSION
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

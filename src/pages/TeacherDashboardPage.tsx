@@ -4,7 +4,7 @@ import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer
 } from "recharts";
 import { MOCK_TEACHER_ALERTS, MOCK_CLASS_RADAR, MOCK_STUDENTS_LIST } from "../data/mockData";
-import { Users, TrendingUp, AlertCircle, CheckCircle, Info, ChevronRight, Filter } from "lucide-react";
+import { Users, TrendingUp, AlertCircle, CheckCircle, Info, ChevronRight, Filter, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 
 const getIconForAlert = (type: string) => {
@@ -55,6 +55,29 @@ export const TeacherDashboardPage = () => {
           <p className="text-xl font-black text-white">88.5%</p>
         </div>
       </div>
+
+      {/* Content Upload Section */}
+      <section className="bg-[#16132F] rounded-[2rem] p-8 border border-white/5 border-dashed relative overflow-hidden">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 border border-white/10">
+            <Upload className="w-8 h-8 text-[#43CBFF]" />
+          </div>
+          <h3 className="text-lg font-black text-white mb-2">Upload Lessons</h3>
+          <p className="text-xs text-slate-500 font-bold mb-8">Drop PDFs or text to generate AI-adaptive missions</p>
+          <input 
+            type="file" 
+            id="pdf-upload" 
+            className="hidden" 
+            onChange={() => toast.success("PDF processing! Lesson generating...")} 
+          />
+          <label 
+            htmlFor="pdf-upload"
+            className="px-8 py-3 bg-white/5 border border-white/10 rounded-full text-xs font-black text-white cursor-pointer hover:bg-white/10 transition"
+          >
+            SELECT FILES
+          </label>
+        </div>
+      </section>
 
       {/* Radar Chart Section */}
       <section className="bg-[#16132F] rounded-[2rem] p-6 border border-white/5 relative overflow-hidden">
