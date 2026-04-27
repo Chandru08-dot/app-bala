@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Mail, Bell, MessageSquare, ChevronRight, Info } from "lucide-react";
+import toast from "react-hot-toast";
 
 const MESSAGES = [
   { id: 1, from: "Squirrel Guide", text: "Don't forget your daily mission! Mars is waiting for you. 🐿️", time: "10m ago", read: false, icon: Info, color: "#43CBFF" },
@@ -9,20 +10,33 @@ const MESSAGES = [
 ];
 
 export const InboxPage = () => {
+  const [messages, setMessages] = React.useState(MESSAGES);
+
+  const readMessage = (id: number) => {
+    setMessages(prev => prev.map(m => m.id === id ? { ...m, read: true } : m));
+    const msg = messages.find(m => m.id === id);
+    toast(msg?.text || "Message read", {
+      icon: "✉️",
+      duration: 4000,
+      style: { borderRadius: '1.5rem', background: '#16132F', color: '#fff', border: '1px solid #6C63FF' }
+    });
+  };
+
   return (
     <div className="flex flex-col gap-8 p-6 pt-12 pb-32">
       <header>
         <h1 className="text-3xl font-black text-white">Inbox</h1>
-        <p className="text-slate-400 font-bold">You have 1 new message!</p>
+        <p className="text-slate-400 font-bold">You have {messages.filter(m => !m.read).length} new messages!</p>
       </header>
 
       <div className="space-y-4">
-        {MESSAGES.map((msg) => (
+        {messages.map((msg) => (
           <motion.div 
             key={msg.id}
             whileTap={{ scale: 0.98 }}
-            className={`bg-[#16132F] rounded-[2rem] p-6 border border-white/5 flex items-center gap-6 relative ${
-              !msg.read ? "ring-2 ring-[#43CBFF]/30" : ""
+            onClick={() => readMessage(msg.id)}
+            className={`bg-[#16132F] rounded-[2rem] p-6 border border-white/5 flex items-center gap-6 relative transition cursor-pointer active:border-[#43CBFF] ${
+              !msg.read ? "ring-2 ring-[#43CBFF]/30 bg-[#1E1B4B]" : ""
             }`}
           >
             {!msg.read && (

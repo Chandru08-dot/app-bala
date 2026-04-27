@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -18,8 +18,23 @@
   font-family: 'Inter', sans-serif;
 }
 
+.dyslexia-mode {
+  font-family: 'Lexend', sans-serif !important;
+  word-spacing: 0.12em !important;
+  line-height: 1.8 !important;
+}
+
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: 'Outfit', sans-serif;
+}
+
+.dyslexia-mode h1, 
+.dyslexia-mode h2, 
+.dyslexia-mode h3, 
+.dyslexia-mode h4, 
+.dyslexia-mode h5, 
+.dyslexia-mode h6 {
+  font-family: 'Lexend', sans-serif !important;
 }
 
 body {

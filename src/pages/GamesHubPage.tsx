@@ -9,6 +9,8 @@ const GAMES = [
   { id: 4, name: "Galaxy Spell", desc: "Complete the sentence mission", icon: Sparkles, color: "#FDE68A", players: "950" },
 ];
 
+import toast from "react-hot-toast";
+
 export const GamesHubPage = () => {
   return (
     <div className="flex flex-col gap-8 p-6 pt-12 pb-32">
@@ -41,9 +43,16 @@ export const GamesHubPage = () => {
               </div>
             </div>
 
-            <button className="p-4 rounded-full bg-white/5 text-white border border-white/10 active:bg-white/20 transition">
+            <motion.button 
+              whileTap={{ scale: 0.8, rotate: 10 }}
+              onClick={() => toast.success(`Launching ${game.name}...`, {
+                icon: "🎮",
+                style: { borderRadius: '1.5rem', background: '#16132F', color: '#fff', border: '1px solid #43CBFF' }
+              })}
+              className="p-4 rounded-full bg-white/5 text-white border border-white/10 active:bg-[#43CBFF] transition"
+            >
               <Play className="w-6 h-6 fill-current" />
-            </button>
+            </motion.button>
           </motion.div>
         ))}
       </div>
