@@ -14,6 +14,9 @@ import { ShopPage } from "./pages/ShopPage";
 import { LeaderboardPage } from "./pages/LeaderboardPage";
 import { MissionControlPage } from "./pages/MissionControlPage";
 import { PhonemeTrainingPage } from "./pages/PhonemeTrainingPage";
+import { GamesHubPage } from "./pages/GamesHubPage";
+import { CommunityPage } from "./pages/CommunityPage";
+import { InboxPage } from "./pages/InboxPage";
 
 const AppShell = () => {
   const location = useLocation();
@@ -32,6 +35,9 @@ const AppShell = () => {
             <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route path="/telemetry" element={<MissionControlPage />} />
             <Route path="/training" element={<PhonemeTrainingPage />} />
+            <Route path="/games" element={<GamesHubPage />} />
+            <Route path="/community" element={<CommunityPage />} />
+            <Route path="/inbox" element={<InboxPage />} />
             <Route path="/diagnostic" element={<DiagnosticPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/upload-new" element={<UploadPage />} />

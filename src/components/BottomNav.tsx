@@ -1,16 +1,16 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Compass, Trophy, ShoppingBag, Award, Mic, Activity } from "lucide-react";
+import { Compass, Gamepad2, Users, Activity, Mail } from "lucide-react";
 
 export const BottomNav = () => {
   const location = useLocation();
 
   const navItems = [
     { icon: Compass, label: "Expedition", path: "/expedition" },
-    { icon: Mic, label: "Training", path: "/training" },
-    { icon: Trophy, label: "Leaderboard", path: "/leaderboard" },
+    { icon: Gamepad2, label: "Games", path: "/games" },
+    { icon: Users, label: "Community", path: "/community" },
     { icon: Activity, label: "Telemetry", path: "/telemetry" },
-    { icon: ShoppingBag, label: "Shop", path: "/shop" },
+    { icon: Mail, label: "Inbox", path: "/inbox" },
   ];
 
   return (
