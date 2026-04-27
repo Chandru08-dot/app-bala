@@ -15,44 +15,52 @@ export const GamesHubPage = () => {
   const [activeGame, setActiveGame] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col gap-8 p-6 pt-12 pb-32 min-h-screen bg-transparent">
-      <header>
-        <h1 className="text-3xl font-black text-white">Games Hub</h1>
-        <p className="text-slate-400 font-bold">Learn through play, Explorer!</p>
+    <div className="flex flex-col gap-10 p-8 pt-16 pb-40 min-h-screen bg-transparent">
+      <header className="relative">
+        <h1 className="text-5xl font-[900] text-white leading-[1.1] mb-2 uppercase italic tracking-tighter">
+          Games <br/> <span className="text-[#43CBFF]">Hub</span>
+        </h1>
+        <p className="text-slate-400 font-bold text-lg">Neural training through play.</p>
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#43CBFF] blur-[100px] opacity-10" />
       </header>
 
-      <div className="grid grid-cols-1 gap-6">
-        {GAMES.map((game) => (
+      <div className="grid grid-cols-1 gap-8">
+        {GAMES.map((game, i) => (
           <motion.div 
             key={game.id}
-            whileTap={{ scale: 0.98 }}
-            className="bg-[#16132F]/80 backdrop-blur-xl rounded-[2.5rem] p-6 border border-white/5 flex items-center gap-6 relative overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+            className="group relative h-64 rounded-[3.5rem] overflow-hidden border-2 border-white/5 hover:border-[#43CBFF]/50 transition-all duration-500 shadow-2xl cursor-pointer"
+            onClick={() => setActiveGame(game.name)}
           >
+            {/* Background Gradient / Image Simulation */}
             <div 
-              className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shrink-0"
-              style={{ background: `linear-gradient(135deg, ${game.color} 0%, ${game.color}88 100%)` }}
-            >
-              <game.icon className="w-10 h-10 text-white" />
-            </div>
+              className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity duration-500"
+              style={{ background: `linear-gradient(135deg, ${game.color} 0%, #0D0B1E 100%)` }}
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,white_0%,transparent_70%)] opacity-10" />
             
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-black text-white mb-1">{game.name}</h3>
-              <p className="text-xs text-slate-500 mb-4 line-clamp-1 font-medium">{game.desc}</p>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black text-[#43CBFF] uppercase tracking-widest bg-[#43CBFF]/10 px-2 py-0.5 rounded">
-                  {game.players} playing
-                </span>
+            <div className="absolute inset-0 p-10 flex flex-col justify-end">
+              <div className="flex justify-between items-end">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/10 mb-4 backdrop-blur-md">
+                    <game.icon className="w-3 h-3 text-white" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">{game.players} Online</span>
+                  </div>
+                  <h3 className="text-3xl font-[900] text-white uppercase italic tracking-tighter">{game.name}</h3>
+                  <p className="text-sm font-bold text-slate-300 mt-2 max-w-[200px] leading-tight">{game.desc}</p>
+                </div>
+                
+                <motion.div 
+                  whileHover={{ scale: 1.1 }}
+                  className="w-16 h-16 rounded-[1.5rem] bg-white flex items-center justify-center text-slate-900 shadow-2xl"
+                >
+                  <Play className="w-8 h-8 fill-current" />
+                </motion.div>
               </div>
             </div>
-
-            <motion.button 
-              whileHover={{ scale: 1.1, backgroundColor: game.color }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setActiveGame(game.name)}
-              className="p-4 rounded-full bg-white/5 text-white border border-white/10 transition-colors"
-            >
-              <Play className="w-6 h-6 fill-current" />
-            </motion.button>
           </motion.div>
         ))}
       </div>

@@ -69,9 +69,15 @@ export const FlashcardPage = () => {
             {/* Front */}
             <div className="absolute inset-0 [backface-visibility:hidden] bg-[#16132F] rounded-[3.5rem] border-4 border-white/10 flex flex-col items-center justify-center p-8 shadow-2xl">
               <p className="text-[10px] font-black text-[#43CBFF] uppercase tracking-widest mb-6">Tap to reveal</p>
-              <h2 className="text-4xl font-black text-white text-center break-all leading-tight">
+              <h2 className="text-4xl font-black text-white text-center break-all leading-tight mb-8">
                 {FLASHCARDS[currentIndex]}
               </h2>
+              <button 
+                onClick={(e) => { e.stopPropagation(); speak(FLASHCARDS[currentIndex]); }}
+                className="p-5 rounded-2xl bg-white/5 border border-white/10 text-[#43CBFF] active:scale-90 transition shadow-lg"
+              >
+                <Volume2 className="w-8 h-8" />
+              </button>
             </div>
 
             {/* Back */}
