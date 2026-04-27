@@ -1,7 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
-  Zap, Star, Flame, Check, ChevronRight, Volume2, Users, Target, Activity, Layout, ShoppingBag, Award
+  Zap, Star, Flame, Check, ChevronRight, Volume2, Users, Target, Activity, Layout, ShoppingBag, Award, Search
 } from "lucide-react";
 import { MOCK_STUDENT_PROFILE, MOCK_STUDENT_QUESTS } from "../data/mockData";
 
@@ -26,6 +26,18 @@ export const StudentDashboardPage = () => {
           </div>
         </div>
       </header>
+
+      {/* Global Search */}
+      <div className="relative">
+        <input 
+          type="text" 
+          placeholder="Search missions, words, or friends..."
+          className="w-full bg-[#16132F] border border-white/5 rounded-[1.5rem] py-4 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/50 transition"
+        />
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+          <Search className="w-5 h-5" />
+        </div>
+      </div>
 
       {/* Stats Quick View */}
       <div className="grid grid-cols-2 gap-4">

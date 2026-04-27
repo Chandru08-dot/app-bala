@@ -15,6 +15,8 @@ export const LessonPage = () => {
   
   const [phase, setPhase] = useState<"landing" | "active" | "report">("landing");
   const [showSettings, setShowSettings] = useState(false);
+  const [isZenMode, setIsZenMode] = useState(false);
+  const [isSoundscapeOn, setIsSoundscapeOn] = useState(false);
   
   const { 
     fontSize, setFontSize,
@@ -61,8 +63,10 @@ export const LessonPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D0B1E] text-white flex flex-col overflow-hidden relative">
-      <SquirrelGuide message={getSquirrelMessage()} />
+    <div className={`min-h-screen transition-colors duration-700 ${isZenMode ? "bg-[#05040a]" : "bg-[#0D0B1E]"} text-white flex flex-col overflow-hidden relative`}>
+      <AnimatePresence>
+        {!isZenMode && <SquirrelGuide message={getSquirrelMessage()} />}
+      </AnimatePresence>
 
       <AnimatePresence>
         {showSettings && (
@@ -78,6 +82,38 @@ export const LessonPage = () => {
             </div>
             
             <div className="space-y-8">
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl">
+                <div className="flex items-center gap-3">
+                  <Sparkles className="w-5 h-5 text-[#43CBFF]" />
+                  <span className="text-sm font-bold">Zen Mode</span>
+                </div>
+                <button 
+                  onClick={() => setIsZenMode(!isZenMode)}
+                  className={`w-12 h-6 rounded-full relative transition-colors ${isZenMode ? "bg-[#43CBFF]" : "bg-white/10"}`}
+                >
+                  <motion.div 
+                    animate={{ x: isZenMode ? 24 : 4 }}
+                    className="absolute top-1 w-4 h-4 bg-white rounded-full"
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl">
+                <div className="flex items-center gap-3">
+                  <AlignLeft className="w-5 h-5 text-[#A855F7]" />
+                  <span className="text-sm font-bold">Ambient Sound</span>
+                </div>
+                <button 
+                  onClick={() => setIsSoundscapeOn(!isSoundscapeOn)}
+                  className={`w-12 h-6 rounded-full relative transition-colors ${isSoundscapeOn ? "bg-[#A855F7]" : "bg-white/10"}`}
+                >
+                  <motion.div 
+                    animate={{ x: isSoundscapeOn ? 24 : 4 }}
+                    className="absolute top-1 w-4 h-4 bg-white rounded-full"
+                  />
+                </button>
+              </div>
+
               <div>
                 <div className="flex justify-between mb-4">
                   <span className="text-sm font-bold text-slate-400">Font Size</span>
@@ -86,17 +122,6 @@ export const LessonPage = () => {
                 <input 
                   type="range" min="16" max="42" value={fontSize} 
                   onChange={(e) => setFontSize(parseInt(e.target.value))}
-                  className="w-full accent-[#43CBFF]"
-                />
-              </div>
-              <div>
-                <div className="flex justify-between mb-4">
-                  <span className="text-sm font-bold text-slate-400">Line Spacing</span>
-                  <span className="text-sm font-black text-[#43CBFF]">{lineHeight}x</span>
-                </div>
-                <input 
-                  type="range" min="1.2" max="3" step="0.1" value={lineHeight} 
-                  onChange={(e) => setLineHeight(parseFloat(e.target.value))}
                   className="w-full accent-[#43CBFF]"
                 />
               </div>
@@ -162,36 +187,43 @@ export const LessonPage = () => {
             exit={{ opacity: 0 }}
             className="flex-1 flex flex-col"
           >
-            <header className="px-6 py-6 border-b border-white/5 flex items-center justify-between backdrop-blur-xl bg-[#16132F]/50">
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={() => setShowSettings(true)}
-                  className="p-2 rounded-full bg-white/5 border border-white/10"
-                >
-                  <Type className="w-4 h-4 text-[#43CBFF]" />
-                </button>
-                <div>
-                  <h2 className="text-sm font-black uppercase tracking-widest text-[#43CBFF]">Mission Active</h2>
-                  <p className="text-xs text-slate-400 truncate max-w-[150px]">{lesson.title}</p>
-                </div>
-              </div>
-              <button 
-                onClick={handleFinish}
-                className="p-3 rounded-full bg-rose-500/20 text-rose-500 border border-rose-500/30"
-              >
-                <Square className="w-5 h-5 fill-current" />
-              </button>
-            </header>
+            <AnimatePresence>
+              {!isZenMode && (
+                <header className="px-6 py-6 border-b border-white/5 flex items-center justify-between backdrop-blur-xl bg-[#16132F]/50">
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={() => setShowSettings(true)}
+                      className="p-2 rounded-full bg-white/5 border border-white/10"
+                    >
+                      <Type className="w-4 h-4 text-[#43CBFF]" />
+                    </button>
+                    <div>
+                      <h2 className="text-sm font-black uppercase tracking-widest text-[#43CBFF]">Mission Active</h2>
+                      <p className="text-xs text-slate-400 truncate max-w-[150px]">{lesson.title}</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={handleFinish}
+                    className="p-3 rounded-full bg-rose-500/20 text-rose-500 border border-rose-500/30"
+                  >
+                    <Square className="w-5 h-5 fill-current" />
+                  </button>
+                </header>
+              )}
+            </AnimatePresence>
 
-            <div className="flex-1 overflow-y-auto px-6 py-10 space-y-12">
+            <div 
+              className={`flex-1 overflow-y-auto px-6 space-y-12 transition-all duration-700 ${isZenMode ? "py-32" : "py-10"}`}
+              onClick={() => isZenMode && setIsZenMode(false)}
+            >
               <div 
-                className="space-y-8 font-medium tracking-wide"
+                className="space-y-10 font-medium tracking-wide"
                 style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
               >
                 {(() => {
                   let globalWordIndex = 0;
                   return paragraphs.map((paragraph, pIndex) => (
-                    <p key={pIndex} className="text-slate-300">
+                    <p key={pIndex} className={`${isZenMode ? "text-white/90" : "text-slate-300"}`}>
                       {paragraph.split(/\s+/).filter(Boolean).map((word) => {
                         const currentIndex = globalWordIndex++;
                         const isActive = currentWordIndex === currentIndex;
@@ -200,16 +232,23 @@ export const LessonPage = () => {
                         return (
                           <motion.span
                             key={currentIndex}
-                            animate={isActive ? { scale: 1.1 } : { scale: 1 }}
-                            className={`inline-block rounded-lg px-1 transition-all duration-300 ${
+                            animate={isActive ? { scale: 1.1, y: -5 } : { scale: 1, y: 0 }}
+                            className={`inline-block rounded-lg px-1.5 transition-all duration-300 ${
                               isActive
-                                ? "bg-[#43CBFF] text-slate-900 font-black shadow-[0_0_15px_#43CBFF]"
+                                ? "bg-[#43CBFF] text-slate-900 font-black shadow-[0_0_20px_#43CBFF]"
                                 : isPassed
-                                ? "text-white/40"
+                                ? (isZenMode ? "text-white/20" : "text-white/40")
                                 : "text-white"
                             }`}
                           >
                             {word}{" "}
+                            {isActive && (
+                              <motion.div 
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 2, opacity: 0 }}
+                                className="absolute inset-0 bg-[#43CBFF]/40 rounded-full"
+                              />
+                            )}
                           </motion.span>
                         );
                       })}
@@ -219,20 +258,24 @@ export const LessonPage = () => {
               </div>
             </div>
 
-            <footer className="p-6 bg-[#16132F]/80 border-t border-white/5 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Progress</span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">
-                  {Math.round(((currentWordIndex + 1) / words.length) * 100)}%
-                </span>
-              </div>
-              <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-[#43CBFF]"
-                  animate={{ width: `${((currentWordIndex + 1) / words.length) * 100}%` }}
-                />
-              </div>
-            </footer>
+            <AnimatePresence>
+              {!isZenMode && (
+                <footer className="p-6 bg-[#16132F]/80 border-t border-white/5 backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Progress</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">
+                      {Math.round(((currentWordIndex + 1) / words.length) * 100)}%
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-[#43CBFF]"
+                      animate={{ width: `${((currentWordIndex + 1) / words.length) * 100}%` }}
+                    />
+                  </div>
+                </footer>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
 

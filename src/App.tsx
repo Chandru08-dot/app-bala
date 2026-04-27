@@ -17,6 +17,9 @@ import { PhonemeTrainingPage } from "./pages/PhonemeTrainingPage";
 import { GamesHubPage } from "./pages/GamesHubPage";
 import { CommunityPage } from "./pages/CommunityPage";
 import { InboxPage } from "./pages/InboxPage";
+import { FlashcardPage } from "./pages/FlashcardPage";
+import { VocabularyGardenPage } from "./pages/VocabularyGardenPage";
+import { ReadingCertificatesPage } from "./pages/ReadingCertificatesPage";
 
 const AppShell = () => {
   const location = useLocation();
@@ -38,6 +41,9 @@ const AppShell = () => {
             <Route path="/games" element={<GamesHubPage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/flashcards" element={<FlashcardPage />} />
+            <Route path="/garden" element={<VocabularyGardenPage />} />
+            <Route path="/certificates" element={<ReadingCertificatesPage />} />
             <Route path="/diagnostic" element={<DiagnosticPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/upload-new" element={<UploadPage />} />
