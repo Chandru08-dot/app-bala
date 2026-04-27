@@ -23,9 +23,9 @@ import { ReadingCertificatesPage } from "./pages/ReadingCertificatesPage";
 import { ParentDashboardPage } from "./pages/ParentDashboardPage";
 import { TeacherDashboardPage } from "./pages/TeacherDashboardPage";
 import { CosmicBackground } from "./components/CosmicBackground";
-
 import { DyslexiaToolbar } from "./components/DyslexiaToolbar";
 import { useSettings } from "./stores/settingsStore";
+import { HallOfFamePage } from "./pages/HallOfFamePage";
 
 const AppShell = () => {
   const location = useLocation();
@@ -57,7 +57,7 @@ const AppShell = () => {
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/inbox" element={<InboxPage />} />
             <Route path="/flashcards" element={<FlashcardPage />} />
-            <Route path="/garden" element={<VocabularyGardenPage />} />
+            <Route path="/fame" element={<HallOfFamePage />} />
             <Route path="/certificates" element={<ReadingCertificatesPage />} />
             <Route path="/parent" element={<ParentDashboardPage />} />
             <Route path="/teacher" element={<TeacherDashboardPage />} />

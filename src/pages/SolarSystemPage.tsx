@@ -1,137 +1,175 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sparkles, Star, Lock, Play, Users, X, Info } from "lucide-react";
+import { Sparkles, Star, Play, Users, X, Info, Target, Zap, Shield, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 
 const MISSIONS = [
-  { id: "1", name: "Mercury Outpost", level: "Beginner", task: "Frequency Filter", status: "completed", color: "#FDE68A" },
-  { id: "2", name: "Venus Station", level: "Intermediate", task: "Mirror Letter Logic", status: "unlocked", color: "#F97316" },
-  { id: "3", name: "Earth Base", level: "Intermediate", task: "Vowel Vortex", status: "unlocked", color: "#3B82F6" },
-  { id: "4", name: "Mars Ruins", level: "Advanced", task: "Syllable Sniper", status: "unlocked", color: "#EF4444" },
-  { id: "5", name: "Jupiter Storm", level: "Expert", task: "Context Navigator", status: "unlocked", color: "#A855F7" },
-  { id: "6", name: "Neptune Abyss", level: "Master", task: "Phonological Core", status: "unlocked", color: "#6366F1" },
+  { 
+    id: "1", name: "Mercury Outpost", level: "Beginner", 
+    task: "Letter Inversion Defense", 
+    desc: "Defend against b, d, p, and q confusion. Use gravitational stabilizers to fix letter orientation.",
+    status: "completed", color: "#FDE68A", icon: Shield
+  },
+  { 
+    id: "2", name: "Venus Station", level: "Intermediate", 
+    task: "Phoneme Pulsar", 
+    desc: "Match sonic pulses to rapidly moving vowel clusters. High-speed phonetic synchronization required.",
+    status: "unlocked", color: "#F97316", icon: Zap
+  },
+  { 
+    id: "3", name: "Earth Base", level: "Intermediate", 
+    task: "Reading Anchor", 
+    desc: "Stabilize text that 'swims' on the screen. Use focus beams to lock words into a readable sequence.",
+    status: "unlocked", color: "#3B82F6", icon: Eye
+  },
+  { 
+    id: "4", name: "Mars Ruins", level: "Advanced", 
+    task: "Syllable Splitter", 
+    desc: "Deconstruct multi-syllabic ancient texts. Precision slicing of complex word structures.",
+    status: "unlocked", color: "#EF4444", icon: Target
+  },
+  { 
+    id: "5", name: "Jupiter Storm", level: "Expert", 
+    task: "Context Gravity", 
+    desc: "Navigate through missing word gaps. Use surrounding sentence gravity to find the correct meaning.",
+    status: "unlocked", color: "#A855F7", icon: Sparkles
+  },
+  { 
+    id: "6", name: "Neptune Abyss", level: "Master", 
+    task: "Vowel Abyss", 
+    desc: "Locate hidden vowels in zero-visibility environments. Rely on phonetic sonar to complete words.",
+    status: "unlocked", color: "#6366F1", icon: Star
+  },
 ];
 
 export const SolarSystemPage = () => {
+  const [selectedMission, setSelectedMission] = useState<typeof MISSIONS[0] | null>(null);
   const [isSquadOpen, setIsSquadOpen] = useState(false);
 
   return (
-    <div className="flex flex-col gap-8 p-6 pt-12 pb-32 min-h-screen bg-transparent overflow-y-auto">
-      <header>
-        <h1 className="text-4xl font-black text-white leading-tight">Reading Expedition</h1>
-        <p className="text-slate-400 font-bold">All sectors are open for exploration</p>
+    <div className="flex flex-col gap-12 p-8 pt-16 pb-40 min-h-screen bg-transparent">
+      <header className="relative">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="relative z-10"
+        >
+          <h1 className="text-5xl font-[900] text-white leading-[1.1] mb-4 uppercase italic tracking-tighter">
+            Mission <br/> <span className="text-[#6C63FF]">Command</span>
+          </h1>
+          <p className="text-slate-400 font-bold text-lg">Select a sector to deploy.</p>
+        </motion.div>
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#6C63FF] blur-[100px] opacity-20" />
       </header>
 
-      <div className="relative flex flex-col gap-12">
-        {/* Central Sun */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-[radial-gradient(circle_at_center,#6C63FF22_0%,transparent_70%)] pointer-events-none" />
-
-        <div className="grid grid-cols-1 gap-6 relative z-10">
-          {MISSIONS.map((m, i) => (
-            <motion.div
-              key={m.id}
-              initial={{ x: i % 2 === 0 ? -50 : 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-[#16132F]/80 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/5 relative group overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-30 transition">
-                <Star className="w-16 h-16" style={{ color: m.color }} />
-              </div>
-
-              <div className="flex items-center gap-6">
+      <div className="grid grid-cols-1 gap-8 relative z-10">
+        {MISSIONS.map((m, i) => (
+          <motion.div
+            key={m.id}
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: i * 0.1 }}
+            onClick={() => setSelectedMission(m)}
+            className="group cursor-pointer"
+          >
+            <div className="bg-[#16132F]/90 backdrop-blur-2xl rounded-[3rem] p-1 border-2 border-white/5 group-hover:border-[#6C63FF]/50 transition-all duration-500 shadow-2xl relative overflow-hidden">
+              <div className="flex items-center gap-6 p-7">
                 <div 
-                  className="w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl relative"
-                  style={{ backgroundColor: `${m.color}22`, border: `2px solid ${m.color}` }}
+                  className="w-20 h-20 rounded-[2rem] flex items-center justify-center shadow-2xl relative transition-transform group-hover:scale-110 duration-500"
+                  style={{ background: `linear-gradient(135deg, ${m.color}22 0%, ${m.color}44 100%)`, border: `2px solid ${m.color}66` }}
                 >
-                  <span className="text-2xl">{i + 1}</span>
+                  <m.icon className="w-10 h-10" style={{ color: m.color }} />
                   {m.status === "completed" && (
-                    <div className="absolute -top-2 -right-2 bg-[#43E97B] rounded-full p-1 shadow-lg">
-                      <Sparkles className="w-3 h-3 text-white" />
+                    <div className="absolute -top-2 -right-2 bg-[#43E97B] rounded-full p-1.5 shadow-lg border-2 border-[#16132F]">
+                      <Sparkles className="w-4 h-4 text-white" />
                     </div>
                   )}
                 </div>
-                <div>
-                  <h3 className="text-xl font-black text-white">{m.name}</h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{m.level}</span>
-                    <div className="w-1 h-1 bg-white/20 rounded-full" />
-                    <span className="text-[10px] font-black text-[#43CBFF] uppercase tracking-widest">{m.task}</span>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-[900] text-white mb-2 uppercase tracking-tight italic">{m.name}</h3>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-black text-[#43CBFF] uppercase tracking-widest">{m.task}</span>
                   </div>
                 </div>
+                <div className="p-4 rounded-full bg-white/5 text-slate-500 group-hover:text-white transition">
+                  <Info className="w-6 h-6" />
+                </div>
               </div>
-
-              <Link 
-                to={`/lesson/${m.id}`}
-                className="mt-8 w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition"
-              >
-                LAUNCH MISSION <Play className="w-4 h-4 fill-current" />
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Multi-Player Co-op Quests */}
-        <section className="mt-12 p-10 rounded-[3.5rem] bg-[linear-gradient(135deg,#1E1B4B_0%,#0F0D29_100%)] border border-white/5 relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#43CBFF]/10 px-4 py-1.5 mb-6 border border-[#43CBFF]/20">
-              <Users className="w-4 h-4 text-[#43CBFF]" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">Multi-Player Quests</span>
             </div>
-            <h2 className="text-3xl font-black text-white mb-4">Join Your Squad</h2>
-            <p className="text-slate-400 font-bold mb-10 max-w-sm">Collaborative missions are now active! Work with friends to unlock the Omega Gate.</p>
-            
-            <button 
-              onClick={() => setIsSquadOpen(true)}
-              className="w-full py-6 rounded-[2.5rem] bg-white text-slate-900 font-black text-lg shadow-2xl hover:scale-105 transition active:scale-95"
-            >
-              START CO-OP MISSION
-            </button>
-          </div>
-        </section>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Co-op Squad Overlay */}
+      {/* Briefing Overlay */}
       <AnimatePresence>
-        {isSquadOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[300] bg-[#0D0B1E] p-8 flex flex-col">
-            <header className="flex justify-between items-center mb-12">
-              <h2 className="text-3xl font-black text-white">Squad Terminal</h2>
-              <button onClick={() => setIsSquadOpen(false)} className="p-3 bg-white/5 rounded-full"><X className="w-6 h-6 text-white" /></button>
-            </header>
-
-            <div className="flex-1 flex flex-col items-center justify-center text-center">
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} className="w-48 h-48 border-4 border-dashed border-[#6C63FF]/30 rounded-full flex items-center justify-center mb-12">
-                <Users className="w-16 h-16 text-[#6C63FF]" />
-              </motion.div>
-              <h3 className="text-3xl font-black text-white mb-4">Searching for Squad...</h3>
-              <p className="text-slate-500 font-bold mb-12">3 friends are online and ready to join.</p>
+        {selectedMission && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[500] bg-[#0D0B1E]/95 backdrop-blur-xl p-8 flex flex-col justify-center items-center"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="w-full max-w-sm bg-[#16132F] rounded-[4rem] p-10 border-4 border-white/10 shadow-[0_0_100px_rgba(108,99,255,0.3)] relative overflow-hidden text-center"
+            >
+              <div className="absolute top-0 left-0 w-full h-2 bg-[linear-gradient(90deg,transparent,6C63FF,transparent)] animate-pulse" />
               
-              <div className="flex -space-x-4 mb-12">
-                {["🦁", "🦊", "🐨"].map((emoji, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ scale: 0 }} 
-                    animate={{ scale: 1 }} 
-                    transition={{ delay: i * 0.2 }}
-                    className="w-16 h-16 rounded-full border-4 border-[#0D0B1E] bg-[#16132F] flex items-center justify-center text-2xl shadow-2xl"
-                  >
-                    {emoji}
-                  </motion.div>
-                ))}
+              <div 
+                className="w-24 h-24 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-2xl"
+                style={{ backgroundColor: `${selectedMission.color}22`, border: `2px solid ${selectedMission.color}` }}
+              >
+                <selectedMission.icon className="w-12 h-12" style={{ color: selectedMission.color }} />
               </div>
 
-              <button 
-                onClick={() => { toast.success("Mission Launching!"); setIsSquadOpen(false); }}
-                className="w-full max-w-xs py-6 bg-[#6C63FF] text-white rounded-[2rem] font-black text-xl shadow-xl animate-pulse"
-              >
-                DEPLOY SQUAD
-              </button>
-            </div>
+              <h2 className="text-4xl font-[900] text-white mb-4 uppercase italic tracking-tighter">
+                {selectedMission.name}
+              </h2>
+              <div className="inline-block px-4 py-1.5 rounded-full bg-[#43CBFF]/10 border border-[#43CBFF]/20 text-[#43CBFF] text-[10px] font-black uppercase tracking-[0.2em] mb-8">
+                {selectedMission.task}
+              </div>
+
+              <div className="bg-white/5 rounded-3xl p-6 text-left border border-white/5 mb-10">
+                <p className="text-sm font-bold text-slate-400 leading-relaxed">
+                  {selectedMission.desc}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <Link 
+                  to={`/lesson/${selectedMission.id}`}
+                  className="w-full py-6 bg-white text-slate-900 rounded-[2rem] font-black text-xl shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition"
+                >
+                  START MISSION <Play className="w-5 h-5 fill-current" />
+                </Link>
+                <button 
+                  onClick={() => setSelectedMission(null)}
+                  className="w-full py-4 text-slate-500 font-black text-sm uppercase tracking-widest"
+                >
+                  ABORT COMMAND
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Co-op Squad Rework */}
+      <section className="mt-8 relative p-12 rounded-[4rem] bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] text-white shadow-[0_20px_80px_rgba(108,99,255,0.4)] overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12">
+          <Users className="w-40 h-40" />
+        </div>
+        <div className="relative z-10">
+          <h2 className="text-4xl font-[900] mb-4 uppercase italic tracking-tighter">Squad <br/> Portal</h2>
+          <p className="font-bold mb-10 opacity-90 max-w-[200px]">3 Explorers waiting for backup.</p>
+          <button 
+            onClick={() => setIsSquadOpen(true)}
+            className="px-10 py-5 bg-[#16132F] text-white rounded-3xl font-black text-lg uppercase tracking-widest shadow-2xl active:scale-90 transition"
+          >
+            JOIN SQUAD
+          </button>
+        </div>
+      </section>
     </div>
   );
 };

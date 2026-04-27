@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Compass, Gamepad2, Sprout, Layers, Heart } from "lucide-react";
+import { Compass, Gamepad2, Trophy, Layers, Heart } from "lucide-react";
 
 export const BottomNav = () => {
   const location = useLocation();
@@ -8,7 +8,7 @@ export const BottomNav = () => {
   const navItems = [
     { icon: Compass, label: "Expedition", path: "/expedition" },
     { icon: Gamepad2, label: "Games", path: "/games" },
-    { icon: Sprout, label: "Garden", path: "/garden" },
+    { icon: Trophy, label: "Fame", path: "/fame" },
     { icon: Layers, label: "Cards", path: "/flashcards" },
     { icon: Heart, label: "Parent", path: "/parent" },
   ];

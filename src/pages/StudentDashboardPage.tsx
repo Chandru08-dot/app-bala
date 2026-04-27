@@ -1,154 +1,112 @@
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
-  Zap, Star, Flame, Check, ChevronRight, Volume2, Users, Target, Activity, Layout, ShoppingBag, Award, Search
+  Zap, Star, Flame, Check, ChevronRight, Volume2, Users, Target, Activity, Layout, ShoppingBag, Award, Search, Sparkles
 } from "lucide-react";
-import { MOCK_STUDENT_PROFILE, MOCK_STUDENT_QUESTS } from "../data/mockData";
+import toast from "react-hot-toast";
 
 export const StudentDashboardPage = () => {
   const navigate = useNavigate();
-  const profile = MOCK_STUDENT_PROFILE;
 
   return (
-    <div className="flex flex-col gap-8 p-6 pt-12 pb-32">
-      {/* Profile Header */}
+    <div className="flex flex-col gap-12 p-8 pt-16 pb-40 min-h-screen bg-transparent">
+      {/* Cinematic Profile Header */}
       <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-black text-white">Hi, Alex! 👋</h1>
-          <p className="text-slate-400 font-bold">Ready for today's mission?</p>
-        </div>
-        <div className="relative">
-          <div className="w-14 h-14 rounded-2xl bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] flex items-center justify-center text-2xl shadow-xl">
+        <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
+          <h1 className="text-5xl font-[900] text-white leading-[1.1] mb-2 uppercase italic tracking-tighter">
+            Hi, <br/> <span className="text-[#43CBFF]">Alex!</span> 👋
+          </h1>
+          <p className="text-slate-400 font-bold text-lg">Your legacy begins today.</p>
+        </motion.div>
+        <div className="relative group cursor-pointer" onClick={() => toast("Profile Level: God Mode Active")}>
+          <div className="w-24 h-24 rounded-[2.5rem] bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] flex items-center justify-center text-5xl shadow-[0_20px_50px_rgba(108,99,255,0.4)] group-hover:scale-110 transition duration-500">
             🐿️
           </div>
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 rounded-full border-4 border-[#0D0B1E] flex items-center justify-center">
-            <span className="text-[10px] font-black text-white">1</span>
+          <div className="absolute -top-2 -right-2 w-8 h-8 bg-rose-500 rounded-full border-4 border-[#0D0B1E] flex items-center justify-center shadow-xl">
+            <span className="text-xs font-black text-white">1</span>
           </div>
         </div>
       </header>
 
-      {/* Global Search */}
-      <div className="relative">
-        <input 
-          type="text" 
-          placeholder="Search missions, words, or friends..."
-          className="w-full bg-[#16132F] border border-white/5 rounded-[1.5rem] py-4 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/50 transition"
-        />
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-          <Search className="w-5 h-5" />
-        </div>
+      {/* Extreme Stats Bar */}
+      <div className="grid grid-cols-2 gap-6">
+        <motion.div 
+          whileHover={{ y: -5 }}
+          className="bg-[#16132F]/90 backdrop-blur-xl rounded-[3rem] p-8 border-2 border-white/5 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10"><Zap className="w-16 h-16 text-[#43CBFF]" /></div>
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Total XP</p>
+          <p className="text-4xl font-[900] text-white tracking-tighter italic">10.8K</p>
+          <div className="h-2 w-full bg-white/5 rounded-full mt-6 overflow-hidden">
+            <motion.div initial={{ width: 0 }} animate={{ width: '70%' }} className="h-full bg-[#43CBFF] shadow-[0_0_15px_rgba(67,203,255,0.8)]" />
+          </div>
+        </motion.div>
+        <motion.div 
+          whileHover={{ y: -5 }}
+          className="bg-[#16132F]/90 backdrop-blur-xl rounded-[3rem] p-8 border-2 border-white/5 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10"><Star className="w-16 h-16 text-yellow-400" /></div>
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Rank</p>
+          <p className="text-4xl font-[900] text-white tracking-tighter italic">#3</p>
+          <p className="text-[10px] font-black text-[#43E97B] mt-4 uppercase tracking-widest">Global Elite</p>
+        </motion.div>
       </div>
 
-      {/* Stats Quick View */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#16132F] rounded-[2rem] p-5 border border-white/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-3 opacity-10"><Zap className="w-12 h-12" /></div>
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Current XP</p>
-          <p className="text-2xl font-black text-white">10,800</p>
-          <div className="h-1.5 w-full bg-white/5 rounded-full mt-3 overflow-hidden">
-            <div className="h-full bg-[#43CBFF] w-[70%]" />
-          </div>
-        </div>
-        <div className="bg-[#16132F] rounded-[2rem] p-5 border border-white/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-3 opacity-10"><Star className="w-12 h-12" /></div>
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Rank</p>
-          <p className="text-2xl font-black text-white">#3</p>
-          <p className="text-[10px] font-bold text-[#43E97B] mt-1">+12 spots this week</p>
-        </div>
-      </div>
-
-      {/* Word of the Day */}
-      <section className="bg-[linear-gradient(135deg,#1E1B4B_0%,#0F0D29_100%)] rounded-[2.5rem] p-8 border border-white/10 relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[#43CBFF]/10 rounded-full blur-3xl" />
-        <div className="flex items-center gap-3 mb-4">
-          <div className="px-3 py-1 bg-[#43CBFF]/20 rounded-full">
-            <span className="text-[10px] font-black text-[#43CBFF] uppercase tracking-widest">Word of the Day</span>
-          </div>
-        </div>
-        <h2 className="text-4xl font-black text-white mb-2 tracking-tight uppercase">Euphoria</h2>
-        <p className="text-sm text-slate-400 font-bold mb-6 italic">/juːˈfɔːriə/</p>
-        <p className="text-slate-300 text-sm leading-relaxed mb-8">
-          A feeling or state of intense excitement and happiness.
-        </p>
-        <button className="w-full bg-white/5 hover:bg-white/10 py-4 rounded-2xl border border-white/10 font-black text-white flex items-center justify-center gap-2 transition">
-          <Volume2 className="w-5 h-5 text-[#43CBFF]" /> LISTEN & PRACTICE
-        </button>
-      </section>
-
-      {/* Daily Streak Calendar */}
-      <section className="bg-[#16132F] rounded-[2.5rem] p-8 border border-white/5">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h3 className="text-lg font-black text-white">Mission Streak</h3>
-            <p className="text-xs text-slate-500 font-bold">You're on a 5-day streak!</p>
-          </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 rounded-full text-rose-500 border border-rose-500/20">
-            <Flame className="w-5 h-5" />
-            <span className="font-black">5</span>
-          </div>
-        </div>
-        <div className="flex justify-between gap-2">
-          {["M", "T", "W", "T", "F", "S", "S"].map((day, i) => (
-            <div key={i} className="flex flex-col items-center gap-3">
-              <span className="text-[10px] font-bold text-slate-500">{day}</span>
-              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
-                i < 5 ? "bg-[#43E97B] text-[#0D0B1E]" : "bg-white/5 text-slate-700 border border-white/5"
-              }`}>
-                {i < 5 ? <Check className="w-6 h-6" /> : <div className="w-2 h-2 bg-slate-700 rounded-full" />}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Active Mission Card */}
+      {/* Massive Active Mission Card */}
       <section className="relative">
-        <h2 className="text-lg font-black text-white mb-4 px-2">Active Mission</h2>
-        <div 
+        <div className="flex justify-between items-center mb-6 px-2">
+          <h2 className="text-2xl font-[900] text-white uppercase italic tracking-tight">Active Mission</h2>
+          <Link to="/expedition" className="text-xs font-black text-[#6C63FF] uppercase tracking-widest">See All</Link>
+        </div>
+        <motion.div 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => navigate("/expedition")}
-          className="bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] rounded-[2.5rem] p-8 shadow-[0_20px_40px_rgba(108,99,255,0.3)] relative overflow-hidden group cursor-pointer active:scale-95 transition-transform"
+          className="bg-[linear-gradient(135deg,#6C63FF_0%,#A855F7_100%)] rounded-[4rem] p-10 shadow-[0_30px_60px_rgba(108,99,255,0.4)] relative overflow-hidden group cursor-pointer"
         >
           <div className="relative z-10">
-            <h3 className="text-2xl font-black text-white mb-2">The Mars Vault</h3>
-            <p className="text-white/80 font-bold mb-8 text-sm">Target: Multi-syllabic fluency</p>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 mb-6 backdrop-blur-md">
+              <Sparkles className="w-4 h-4 text-white" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white">Priority Mission</span>
+            </div>
+            <h3 className="text-5xl font-[900] text-white mb-4 uppercase italic tracking-tighter leading-none">The Mars <br/> Vault</h3>
+            <p className="text-white/80 font-bold mb-10 text-lg">Target: Syllable Slicing Accuracy</p>
             <div className="flex items-center justify-between">
-              <div className="flex -space-x-3">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="w-10 h-10 rounded-full border-4 border-[#6C63FF] bg-slate-800 flex items-center justify-center text-xs">
-                    {["🦁", "🦊", "🐼"][i-1]}
+              <div className="flex -space-x-4">
+                {["🐨", "🦁", "🦊", "🐼"].map((e, i) => (
+                  <div key={i} className="w-12 h-12 rounded-full border-4 border-[#6C63FF] bg-slate-800 flex items-center justify-center text-xl shadow-xl">
+                    {e}
                   </div>
                 ))}
-                <div className="w-10 h-10 rounded-full border-4 border-[#6C63FF] bg-white/10 backdrop-blur-md flex items-center justify-center text-[10px] font-black">
-                  +12
-                </div>
               </div>
-              <div className="bg-white text-slate-900 px-6 py-3 rounded-full font-black text-sm flex items-center gap-2 group-hover:px-8 transition-all">
-                RESUME <ChevronRight className="w-4 h-4" />
+              <div className="bg-white text-slate-900 px-10 py-5 rounded-[2rem] font-[900] text-lg flex items-center gap-3 shadow-2xl group-hover:px-12 transition-all">
+                RESUME <ChevronRight className="w-6 h-6 stroke-[3]" />
               </div>
             </div>
           </div>
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all" />
-        </div>
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-[100px] pointer-events-none" />
+        </motion.div>
       </section>
 
-      {/* Class Progress */}
-      <section className="bg-[#16132F] rounded-[2.5rem] p-8 border border-white/5">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="p-3 bg-[#A855F7]/10 rounded-xl text-[#A855F7]">
-            <Users className="w-6 h-6" />
+      {/* Word of the Day - Cinematic Edition */}
+      <section className="bg-[#16132F]/90 backdrop-blur-2xl rounded-[4rem] p-10 border-2 border-white/5 relative overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-60 h-60 bg-[#43CBFF]/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-12 h-12 bg-[#43CBFF]/20 rounded-2xl flex items-center justify-center text-[#43CBFF]">
+            <Target className="w-6 h-6" />
           </div>
-          <div>
-            <h3 className="font-black text-white">Class 4B Goal</h3>
-            <p className="text-xs text-slate-500">Collect 50,000 XP together</p>
-          </div>
+          <h3 className="text-xl font-black text-white uppercase tracking-tight">Sonic Focus</h3>
         </div>
-        <div className="h-4 w-full bg-white/5 rounded-full overflow-hidden mb-3">
-          <div className="h-full bg-[#A855F7] w-[65%]" />
-        </div>
-        <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-          <span>32,500 XP</span>
-          <span>50,000 XP</span>
-        </div>
+        <h2 className="text-6xl font-[900] text-white mb-4 tracking-tighter uppercase italic text-[#43CBFF]">Euphoria</h2>
+        <p className="text-slate-400 font-bold mb-10 leading-relaxed text-lg">
+          A state of intense excitement and happiness. Master this sound to unlock the next sector.
+        </p>
+        <button 
+          onClick={() => toast.success("Recording Voice Telemetry...")}
+          className="w-full bg-white/5 hover:bg-white/10 py-6 rounded-[2rem] border-2 border-white/10 font-black text-white flex items-center justify-center gap-3 transition-all active:scale-95"
+        >
+          <Volume2 className="w-6 h-6 text-[#43CBFF]" /> PRACTICE ENUNCIATION
+        </button>
       </section>
     </div>
   );
