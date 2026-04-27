@@ -20,6 +20,8 @@ import { InboxPage } from "./pages/InboxPage";
 import { FlashcardPage } from "./pages/FlashcardPage";
 import { VocabularyGardenPage } from "./pages/VocabularyGardenPage";
 import { ReadingCertificatesPage } from "./pages/ReadingCertificatesPage";
+import { ParentDashboardPage } from "./pages/ParentDashboardPage";
+import { TeacherDashboardPage } from "./pages/TeacherDashboardPage";
 
 const AppShell = () => {
   const location = useLocation();
@@ -44,6 +46,8 @@ const AppShell = () => {
             <Route path="/flashcards" element={<FlashcardPage />} />
             <Route path="/garden" element={<VocabularyGardenPage />} />
             <Route path="/certificates" element={<ReadingCertificatesPage />} />
+            <Route path="/parent" element={<ParentDashboardPage />} />
+            <Route path="/teacher" element={<TeacherDashboardPage />} />
             <Route path="/diagnostic" element={<DiagnosticPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/upload-new" element={<UploadPage />} />

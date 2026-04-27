@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import { MOCK_TEACHER_ALERTS, MOCK_CLASS_RADAR, MOCK_STUDENTS_LIST } from "../data/mockData";
 import { Users, TrendingUp, AlertCircle, CheckCircle, Info, ChevronRight, Filter } from "lucide-react";
+import toast from "react-hot-toast";
 
 const getIconForAlert = (type: string) => {
   switch(type) {
@@ -29,7 +30,10 @@ export const TeacherDashboardPage = () => {
           <h1 className="text-2xl font-black text-white">Class Overview</h1>
           <p className="text-slate-400 text-sm font-bold">24 Active Students</p>
         </div>
-        <button className="p-3 rounded-full bg-white/5 border border-white/10">
+        <button 
+          onClick={() => toast("Sorting filter coming soon!")}
+          className="p-3 rounded-full bg-white/5 border border-white/10"
+        >
           <Filter className="w-5 h-5 text-white" />
         </button>
       </header>
@@ -75,7 +79,12 @@ export const TeacherDashboardPage = () => {
           <div>
             <h3 className="font-black text-white text-base">Intervention Needed</h3>
             <p className="text-sm text-slate-400 mt-1">3 students are struggling with complex vowels and diphthongs.</p>
-            <button className="mt-4 px-6 py-2 rounded-full bg-rose-500 text-white font-black text-xs">REVIEW CASES</button>
+            <button 
+              onClick={() => toast("Opening Intervention Module...")}
+              className="mt-4 px-6 py-2 rounded-full bg-rose-500 text-white font-black text-xs"
+            >
+              REVIEW CASES
+            </button>
           </div>
         </div>
       </section>

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { MOCK_LESSONS } from "../data/mockData";
-import { X, Play, Square, Award, Sparkles, ChevronRight, Settings, Type, AlignLeft } from "lucide-react";
+import { X, Play, Square, Award, Sparkles, ChevronRight, Settings, Type, AlignLeft, Activity } from "lucide-react";
 import { useVoiceAnalysis } from "../hooks/useVoiceAnalysis";
 import { SquirrelGuide } from "../components/SquirrelGuide";
 import { useSettings } from "../stores/settingsStore";
@@ -262,10 +262,22 @@ export const LessonPage = () => {
               {!isZenMode && (
                 <footer className="p-6 bg-[#16132F]/80 border-t border-white/5 backdrop-blur-xl">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Progress</span>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">
-                      {Math.round(((currentWordIndex + 1) / words.length) * 100)}%
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Progress</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[#43CBFF]">
+                          {Math.round(((currentWordIndex + 1) / words.length) * 100)}%
+                        </span>
+                      </div>
+                      <div className="h-8 w-px bg-white/10 mx-2" />
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Focus</span>
+                        <div className="flex items-center gap-1">
+                          <Activity className="w-3 h-3 text-[#43E97B]" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-[#43E97B]">Optimal</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                     <motion.div 

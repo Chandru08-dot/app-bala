@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Compass, Gamepad2, Sprout, Layers, Activity } from "lucide-react";
+import { Compass, Gamepad2, Sprout, Layers, Heart } from "lucide-react";
 
 export const BottomNav = () => {
   const location = useLocation();
@@ -10,7 +10,7 @@ export const BottomNav = () => {
     { icon: Gamepad2, label: "Games", path: "/games" },
     { icon: Sprout, label: "Garden", path: "/garden" },
     { icon: Layers, label: "Cards", path: "/flashcards" },
-    { icon: Activity, label: "Stats", path: "/telemetry" },
+    { icon: Heart, label: "Parent", path: "/parent" },
   ];
 
   return (
