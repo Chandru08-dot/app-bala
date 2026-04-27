@@ -1,9 +1,8 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-
 import { authStore } from "../stores/authStore";
 
 const baseLink =
-  "rounded-full px-4 py-2 text-sm font-medium transition hover:bg-white/80 hover:text-sea";
+  "rounded-full px-5 py-2 text-sm font-bold transition hover:bg-white/10 hover:text-white";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -26,16 +25,16 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-20 border-b border-sky-100 bg-white/70 backdrop-blur">
+    <nav className="sticky top-0 z-20 border-b border-white/5 bg-[#16132F]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link to="/dashboard" className="flex items-center gap-3 text-ink">
-          <span className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-[linear-gradient(135deg,#2f80ed_0%,#4fa6ff_100%)] text-base font-bold text-white shadow-soft">
+        <Link to="/dashboard" className="flex items-center gap-4 text-white">
+          <span className="flex h-12 w-12 items-center justify-center rounded-[1.2rem] bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] text-xl font-bold text-white shadow-[0_4px_14px_rgba(108,99,255,0.4)]">
             R
           </span>
           <span>
-            <span className="block text-xl font-bold tracking-tight text-ink">Readable</span>
-            <span className="block text-xs font-bold uppercase tracking-widest text-sky-500">
-              Guided Reading
+            <span className="block text-2xl font-extrabold tracking-tight text-white">Readable</span>
+            <span className="block text-xs font-bold uppercase tracking-widest text-[#43CBFF]">
+              Static Demo
             </span>
           </span>
         </Link>
@@ -47,21 +46,21 @@ export const Navbar = () => {
               className={({ isActive }) =>
                 `${baseLink} ${
                   isActive
-                    ? "bg-[#eef6ff] text-sea shadow-sm ring-1 ring-sea/10"
-                    : "text-slate-500 hover:text-ink"
+                    ? "bg-[#6C63FF]/20 text-[#43CBFF] shadow-sm ring-1 ring-[#43CBFF]/30"
+                    : "text-slate-400 hover:text-white"
                 }`
               }
             >
               {link.label}
             </NavLink>
           ))}
-          <span className="hidden items-center rounded-full border border-sky-100 bg-white/80 px-4 py-2.5 text-sm font-medium text-slate-500 shadow-sm backdrop-blur sm:flex">
+          <span className="hidden items-center rounded-full border border-white/10 bg-[#1E1B4B] px-5 py-2.5 text-sm font-bold text-slate-300 shadow-sm sm:flex">
             {user?.email}
           </span>
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-full bg-[linear-gradient(135deg,#2f80ed_0%,#4fa6ff_100%)] px-5 py-2.5 text-sm font-semibold tracking-wide text-white shadow-[0_4px_12px_rgba(47,128,237,0.3)] transition hover:brightness-105 active:scale-[0.98]"
+            className="rounded-full bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] px-6 py-2.5 text-sm font-bold tracking-wide text-white shadow-[0_4px_12px_rgba(108,99,255,0.4)] transition hover:scale-105 active:scale-[0.98]"
           >
             Log out
           </button>

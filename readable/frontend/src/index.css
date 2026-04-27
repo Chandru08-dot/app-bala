@@ -1,18 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color: #16324f;
-  background-color: #f4f8ff;
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  --color-bg-dark: #0D0B1E;
+  --color-bg-card: #16132F;
+  --color-primary: #6C63FF;
+  --color-secondary: #43CBFF;
+  --color-text: #FFFFFF;
+  --color-text-muted: #94A3B8;
+  
+  color: var(--color-text);
+  background-color: var(--color-bg-dark);
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Outfit', sans-serif;
 }
 
 html {
-  background:
-    radial-gradient(circle at top left, rgba(96, 165, 250, 0.16), transparent 28%),
-    radial-gradient(circle at top right, rgba(125, 211, 252, 0.1), transparent 26%),
-    linear-gradient(180deg, #f8fbff 0%, #f3f8ff 48%, #eef5ff 100%);
+  background: var(--color-bg-dark);
 }
 
 body {
@@ -20,7 +30,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: transparent;
-  color: #16324f;
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -34,4 +45,19 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(108, 99, 255, 0.5);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 99, 255, 0.8);
 }

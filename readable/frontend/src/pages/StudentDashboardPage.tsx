@@ -1,425 +1,212 @@
-import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-
-import { authStore } from "../stores/authStore";
-import { profileStore } from "../stores/profileStore";
+import { motion } from "framer-motion";
+import { PlayCircle, Award, Target, Zap, Star, Flame, BrainCircuit } from "lucide-react";
+import { MOCK_STUDENT_PROFILE, MOCK_LESSONS, MOCK_STUDENT_QUESTS } from "../data/mockData";
 import { ProgressChart } from "../components/ProgressChart";
-import {
-  useStudentLessonsQuery,
-  useStudentProfileQuery,
-  useStudentProgressQuery,
-} from "../hooks/useProfileQueries";
-
-const formatLessonDate = (value: string) =>
-  new Date(value).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-const formatSessionDate = (value: string | null) =>
-  value
-    ? new Date(value).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      })
-    : "Not yet";
-
-const contentTone = {
-  text: "from-[#f9fcff] via-[#eef6ff] to-[#e5f5ff]",
-  pdf: "from-[#f9fcff] via-[#eff4ff] to-[#e9efff]",
-  image: "from-[#f8fbff] via-[#eef8ff] to-[#edf6ff]",
-} as const;
-
-const buildFocusTone = (accuracy: number, attention: number) => {
-  if (accuracy >= 92 && attention >= 0.8) {
-    return {
-      title: "Strong reading flow",
-      body: "Readable can lean into lighter supports and more fluent pacing today.",
-    };
-  }
-
-  if (attention < 0.72) {
-    return {
-      title: "Steady focus mode",
-      body: "Shorter chunks, calmer pacing, and stronger line support will help today.",
-    };
-  }
-
-  return {
-    title: "Growth-focused support",
-    body: "A balanced lesson with phonics help and guided pacing is a good fit today.",
-  };
-};
 
 export const StudentDashboardPage = () => {
-  const user = authStore((state) => state.user);
-  const studentId = user?.id;
-  const profileQuery = useStudentProfileQuery(studentId);
-  const progressQuery = useStudentProgressQuery(studentId);
-  const lessonsQuery = useStudentLessonsQuery(studentId);
-  const setStudentProfile = profileStore((state) => state.setStudentProfile);
-  const setProgressEntries = profileStore((state) => state.setProgressEntries);
+  const profile = MOCK_STUDENT_PROFILE;
 
-  useEffect(() => {
-    if (profileQuery.data) {
-      setStudentProfile(profileQuery.data);
-    }
-  }, [profileQuery.data, setStudentProfile]);
-
-  useEffect(() => {
-    if (progressQuery.data) {
-      setProgressEntries(progressQuery.data.entries);
-    }
-  }, [progressQuery.data, setProgressEntries]);
-
-  const profile = profileQuery.data;
-  const progress = progressQuery.data;
-  const lessons = lessonsQuery.data ?? [];
-
-  const diagnosticHistory = useMemo(
-    () =>
-      (profile?.recent_sessions ?? [])
-        .filter((session) => session.session_type === "diagnostic")
-        .slice(0, 4),
-    [profile?.recent_sessions],
-  );
-
-  const focusTone = buildFocusTone(profile?.avg_accuracy_pct ?? 0, profile?.attention_score ?? 0);
-  const challengeWords = progress?.difficult_words ?? profile?.difficult_words ?? [];
+  // Level calculation (Mock)
+  const currentLevel = 12;
+  const xp = 4500;
+  const nextLevelXp = 5000;
+  const xpPercentage = (xp / nextLevelXp) * 100;
 
   return (
-    <div className="space-y-8">
-      <section className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
-        <div className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-sky-500">Student Dashboard</p>
-              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-tight text-ink">
-                Ready for a calmer reading session that still feels motivating.
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
-                Launch a fresh diagnostic, revisit a personalized lesson, and watch support adjust
-                to pace, attention, and challenge words.
-              </p>
-            </div>
-            <div className="rounded-[1.6rem] bg-[#eef6ff] px-6 py-5 ring-1 ring-sea/10">
-              <p className="text-xs font-bold uppercase tracking-widest text-sea">Today’s focus</p>
-              <p className="mt-2 text-xl font-semibold text-ink">{focusTone.title}</p>
-              <p className="mt-2 max-w-xs text-sm leading-7 text-slate-600">{focusTone.body}</p>
-            </div>
-          </div>
-
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            <div className="rounded-[1.5rem] border border-sky-100 bg-white/60 p-5 backdrop-blur">
-              <p className="text-sm font-medium text-slate-500">Reading level</p>
-              <p className="mt-3 text-3xl font-semibold text-ink">{profile?.reading_level ?? "Pending"}</p>
-              <p className="mt-2 text-sm text-slate-500">Updated after each finished session.</p>
-            </div>
-            <div className="rounded-[1.5rem] border border-sky-100 bg-white/60 p-5 backdrop-blur">
-              <p className="text-sm font-medium text-slate-500">Average accuracy</p>
-              <p className="mt-3 text-3xl font-semibold text-ink">
-                {profile ? `${profile.avg_accuracy_pct.toFixed(1)}%` : "--"}
-              </p>
-              <p className="mt-2 text-sm text-slate-500">Useful for choosing lesson support.</p>
-            </div>
-            <div className="rounded-[1.5rem] border border-sky-100 bg-white/60 p-5 backdrop-blur">
-              <p className="text-sm font-medium text-slate-500">Average pace</p>
-              <p className="mt-3 text-3xl font-semibold text-ink">
-                {profile ? `${profile.avg_speed_wpm.toFixed(0)} WPM` : "--"}
-              </p>
-              <p className="mt-2 text-sm text-slate-500">Feeds the adaptive pacer target.</p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              to="/diagnostic"
-              className="rounded-full bg-[linear-gradient(135deg,#2f80ed_0%,#4fa6ff_100%)] px-6 py-3.5 text-sm font-semibold tracking-wide text-white shadow-[0_4px_12px_rgba(47,128,237,0.3)] transition hover:brightness-105 active:scale-[0.98]"
-            >
-              Open Diagnostic
-            </Link>
-            {lessons[0] ? (
-              <Link
-                to={`/lesson/${lessons[0].lesson_id}?contentId=${lessons[0].personalized_content_id}`}
-                className="rounded-full border border-sky-100 bg-white px-6 py-3.5 text-sm font-semibold tracking-wide text-slate-600 shadow-sm transition hover:text-sea active:scale-[0.98]"
-              >
-                Continue Reading Lesson
-              </Link>
-            ) : null}
-          </div>
-        </div>
-
-        <div className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-sky-500">Session pulse</p>
-              <h2 className="mt-2 text-2xl font-semibold text-ink">Live snapshot</h2>
-            </div>
-            <div className="rounded-full border border-sky-100 bg-white px-4 py-2 text-sm font-medium text-slate-500 shadow-sm">
-              {profileQuery.isLoading || progressQuery.isLoading ? "Refreshing..." : "Ready"}
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-4">
-            <div className="rounded-[1.5rem] bg-[#f7fbff] p-5">
-              <p className="text-sm text-slate-500">Attention score</p>
-              <p className="mt-2 text-3xl font-semibold text-ink">
-                {profile ? `${Math.round(profile.attention_score * 100)}%` : "--"}
-              </p>
-              <div className="mt-4 h-2 overflow-hidden rounded-full bg-sky-100">
-                <div
-                  className="h-full rounded-full bg-[linear-gradient(90deg,#2f80ed_0%,#79c7ff_100%)]"
-                  style={{ width: `${Math.max((profile?.attention_score ?? 0) * 100, 8)}%` }}
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-8"
+    >
+      {/* Gamified Header Header */}
+      <section className="relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#16132F] shadow-2xl">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] rounded-full blur-[120px] pointer-events-none opacity-20" />
+        
+        <div className="relative z-10 p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-8">
+            <div className="relative">
+              <svg className="w-32 h-32 transform -rotate-90">
+                <circle cx="64" cy="64" r="56" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" />
+                <motion.circle 
+                  cx="64" cy="64" r="56" fill="none" 
+                  stroke="url(#gradient)" strokeWidth="12" 
+                  strokeDasharray="351.8" 
+                  initial={{ strokeDashoffset: 351.8 }}
+                  animate={{ strokeDashoffset: 351.8 - (351.8 * xpPercentage) / 100 }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  strokeLinecap="round" 
                 />
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6C63FF" />
+                    <stop offset="100%" stopColor="#43CBFF" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Level</span>
+                <span className="text-4xl font-black text-white">{currentLevel}</span>
               </div>
             </div>
-
-            <div className="rounded-[1.5rem] bg-[#f7fbff] p-5">
-              <p className="text-sm text-slate-500">Most recent session</p>
-              <p className="mt-2 text-lg font-semibold text-ink">
-                {profile?.recent_sessions[0]
-                  ? `${profile.recent_sessions[0].session_type} • ${profile.recent_sessions[0].status}`
-                  : "No recent sessions"}
-              </p>
-              <p className="mt-2 text-sm text-slate-500">
-                {profile?.recent_sessions[0]
-                  ? formatSessionDate(profile.recent_sessions[0].started_at)
-                  : "Complete a diagnostic to populate this area."}
-              </p>
-            </div>
-
-            <div className="rounded-[1.5rem] bg-[#f7fbff] p-5">
-              <p className="text-sm text-slate-500">Challenge words</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {challengeWords.length > 0 ? (
-                  challengeWords.slice(0, 6).map((word) => (
-                    <span
-                      key={word}
-                      className="rounded-full bg-white px-3 py-2 text-sm font-semibold text-sea ring-1 ring-sky-100"
-                    >
-                      {word}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-sm text-slate-500">Challenge words will appear here.</span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-widest text-sky-500">Lesson Library</p>
-            <h2 className="mt-2 text-2xl font-semibold text-ink">Personalized reading cards</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
-              Each lesson opens in its own calm reading space with supports chosen for this
-              student’s current profile.
-            </p>
-          </div>
-          <div className="rounded-full border border-sky-100 bg-white px-4 py-2 text-sm font-medium text-slate-500 shadow-sm">
-            {lessons.length} lesson{lessons.length === 1 ? "" : "s"} ready
-          </div>
-        </div>
-
-        {lessonsQuery.isLoading ? (
-          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={`lesson-skeleton-${index}`}
-                className="h-64 animate-pulse rounded-[1.8rem] bg-sky-50"
-              />
-            ))}
-          </div>
-        ) : lessons.length > 0 ? (
-          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {lessons.map((lesson, index) => (
-              <Link
-                key={lesson.personalized_content_id}
-                to={`/lesson/${lesson.lesson_id}?contentId=${lesson.personalized_content_id}`}
-                className={`group relative overflow-hidden rounded-[1.9rem] bg-gradient-to-br ${contentTone[lesson.content_type]} p-[1px] transition duration-200 hover:-translate-y-1 hover:shadow-soft`}
-              >
-                <div className="h-full rounded-[1.85rem] border border-white/85 bg-white/88 p-6 backdrop-blur">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-500">
-                        Lesson {String(index + 1).padStart(2, "0")}
-                      </p>
-                      <h3 className="mt-3 text-xl font-semibold leading-tight text-ink transition group-hover:text-sea">
-                        {lesson.title}
-                      </h3>
-                    </div>
-                    <div className="rounded-full bg-white px-3 py-2 text-xs font-semibold text-slate-500 ring-1 ring-sky-100">
-                      {lesson.segment_count} chunks
-                    </div>
-                  </div>
-
-                  <p className="mt-4 text-sm text-slate-500">
-                    Curated on {formatLessonDate(lesson.created_at)}
-                  </p>
-
-                  <p className="mt-5 line-clamp-4 text-sm leading-7 text-slate-600">
-                    {lesson.preview_text}
-                  </p>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {lesson.support_focus.map((focus) => (
-                      <span
-                        key={`${lesson.personalized_content_id}-${focus}`}
-                        className="rounded-full bg-mist px-3 py-2 text-xs font-semibold text-sea"
-                      >
-                        {focus}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-sky-50 pt-4">
-                    <p className="text-sm text-slate-500">Open this lesson in a full reading view.</p>
-                    <span className="rounded-full bg-[linear-gradient(135deg,#2f80ed_0%,#4fa6ff_100%)] px-4 py-2 text-sm font-semibold text-white">
-                      Open card
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="mt-6 rounded-[1.9rem] bg-hero-radial p-8">
-            <h3 className="text-xl font-semibold text-ink">No personalized lessons yet</h3>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
-              Once a teacher personalizes a lesson for this student, it will appear here as a
-              clean lesson card ready to open.
-            </p>
-          </div>
-        )}
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[0.95fr,1.05fr]">
-        <div className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-          <div className="flex items-center justify-between gap-4">
+            
             <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-sky-500">Diagnostic History</p>
-              <h2 className="mt-2 text-2xl font-semibold text-ink">Past check-ins</h2>
+              <h1 className="text-4xl font-extrabold text-white">Welcome back, Alex!</h1>
+              <p className="mt-2 text-lg text-slate-400 font-medium">{xp} / {nextLevelXp} XP to Level {currentLevel + 1}</p>
+              <div className="mt-4 flex items-center gap-4">
+                <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded-full">
+                  <Flame className="w-5 h-5 text-rose-500" />
+                  <span className="font-bold text-rose-500">{profile.current_streak} Day Streak</span>
+                </div>
+                <div className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/20 px-4 py-2 rounded-full">
+                  <Star className="w-5 h-5 text-yellow-400" />
+                  <span className="font-bold text-yellow-400">Master Reader</span>
+                </div>
+              </div>
             </div>
-            <Link
-              to="/diagnostic"
-              className="rounded-full border border-sky-100 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm hover:text-sea"
-            >
-              Run again
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Link to="/diagnostic" className="flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#A855F7_0%,#3B82F6_100%)] px-8 py-4 text-base font-bold text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] transition hover:scale-105 active:scale-[0.98]">
+              <BrainCircuit className="w-5 h-5" /> Take Diagnostic
             </Link>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-5 grid gap-3">
-            {diagnosticHistory.length > 0 ? (
-              diagnosticHistory.map((session) => (
-                <div
-                  key={session.session_id}
-                  className="rounded-[1.4rem] bg-[#f7fbff] p-4 ring-1 ring-sky-50"
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-ink">Diagnostic #{session.session_id}</p>
-                      <p className="mt-1 text-sm text-slate-500">
-                        {formatSessionDate(session.started_at)} • {session.status}
-                      </p>
+      <div className="grid gap-8 xl:grid-cols-[1.2fr,0.8fr]">
+        
+        {/* Left Column: Skill Tree / Learning Path */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <Target className="w-6 h-6 text-[#43CBFF]" />
+              Learning Path
+            </h2>
+          </div>
+          
+          <div className="relative rounded-[2.5rem] border border-white/5 bg-[#16132F] p-8 shadow-2xl overflow-hidden min-h-[500px]">
+            {/* Mock Path Line */}
+            <div className="absolute top-1/2 left-0 w-full h-2 bg-white/5 transform -translate-y-1/2 rounded-full" />
+            <motion.div 
+              className="absolute top-1/2 left-0 w-1/2 h-2 bg-gradient-to-r from-[#6C63FF] to-[#43CBFF] transform -translate-y-1/2 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: "50%" }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+            />
+
+            <div className="relative z-10 h-full flex items-center justify-between px-4 mt-20">
+              {MOCK_LESSONS.slice(0,4).map((lesson, idx) => {
+                const isCompleted = idx < 2;
+                const isCurrent = idx === 2;
+                const isLocked = idx > 2;
+
+                return (
+                  <div key={lesson.id} className="flex flex-col items-center relative group">
+                    {/* Tooltip */}
+                    <div className="absolute -top-32 w-64 bg-[#1E1B4B] border border-white/10 rounded-2xl p-4 shadow-xl opacity-0 group-hover:opacity-100 transition pointer-events-none transform -translate-y-4 group-hover:translate-y-0 z-20">
+                      <p className="font-bold text-white mb-1">{lesson.title}</p>
+                      <p className="text-xs text-slate-400 line-clamp-2">{lesson.description}</p>
+                      <div className="mt-3 flex items-center gap-2">
+                        <span className="text-xs font-bold text-[#A855F7] bg-white/5 px-2 py-1 rounded">Lvl {lesson.difficulty_level}</span>
+                        <span className="text-xs font-bold text-[#43CBFF] bg-white/5 px-2 py-1 rounded">{lesson.category}</span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-sea">
-                        {session.accuracy_pct !== null ? `${session.accuracy_pct}%` : "--"}
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {session.speed_wpm !== null ? `${session.speed_wpm} WPM` : "No pace"}
-                      </p>
-                    </div>
+
+                    {/* Node */}
+                    <motion.div 
+                      whileHover={!isLocked ? { scale: 1.1 } : {}}
+                      className={`w-20 h-20 rounded-full flex items-center justify-center border-4 relative z-10 cursor-pointer shadow-lg ${
+                        isCompleted ? "bg-[#1E1B4B] border-[#43E97B] text-[#43E97B]" :
+                        isCurrent ? "bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] border-transparent text-white shadow-[0_0_30px_rgba(108,99,255,0.6)]" :
+                        "bg-[#1E1B4B] border-white/10 text-slate-500 opacity-50"
+                      }`}
+                    >
+                      {isCompleted ? <Star className="w-8 h-8 fill-current" /> :
+                       isCurrent ? <PlayCircle className="w-10 h-10" /> :
+                       <div className="w-4 h-4 rounded-full bg-slate-500" />}
+                    </motion.div>
+                    
+                    {isCurrent && (
+                      <Link 
+                        to={`/lesson/${lesson.id}`} 
+                        className="mt-6 rounded-full bg-white/10 px-6 py-2 text-sm font-bold text-white hover:bg-white/20 transition whitespace-nowrap"
+                      >
+                        Start Next
+                      </Link>
+                    )}
                   </div>
-                </div>
-              ))
-            ) : (
-              <div className="rounded-[1.4rem] bg-[#f7fbff] p-5 text-sm leading-7 text-slate-500">
-                No diagnostic history yet. The first completed test will appear here as a clean
-                summary card.
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-[2.5rem] border border-white/5 bg-[#16132F] p-8 shadow-2xl">
+            <h2 className="text-2xl font-bold text-white mb-6">Brain Power Progress</h2>
+            <ProgressChart data={profile.recent_sessions} />
+          </div>
+        </section>
+
+        {/* Right Column: Quests & Stats */}
+        <section className="space-y-6">
+          <div className="rounded-[2.5rem] border border-white/5 bg-[#16132F] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-2xl pointer-events-none" />
+            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
+              <Zap className="w-5 h-5 text-yellow-400" />
+              Daily Quests
+            </h2>
+            <div className="space-y-5 relative z-10">
+              {MOCK_STUDENT_QUESTS.map((quest) => {
+                const percent = (quest.progress / quest.total) * 100;
+                return (
+                  <div key={quest.id} className="bg-[#1E1B4B] border border-white/5 rounded-2xl p-5">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <p className="font-bold text-white">{quest.title}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">{quest.description}</p>
+                      </div>
+                      <span className="text-xs font-black text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded">{quest.reward}</span>
+                    </div>
+                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percent}%` }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                        className={`h-full rounded-full ${percent >= 100 ? "bg-[#43E97B]" : "bg-[linear-gradient(90deg,#6C63FF_0%,#43CBFF_100%)]"}`}
+                      />
+                    </div>
+                    <p className="text-xs font-bold text-slate-400 text-right mt-2">{quest.progress} / {quest.total}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-[2.5rem] border border-white/5 bg-[#16132F] p-8 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6">Stats Overview</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-[#1E1B4B] border border-white/5 p-5 rounded-2xl text-center">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#43CBFF]">Accuracy</p>
+                <p className="text-3xl font-black text-white mt-2">{profile.avg_accuracy_pct}%</p>
               </div>
-            )}
-          </div>
-        </div>
-
-        <div className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-sky-500">Progress Story</p>
-              <h2 className="mt-2 text-2xl font-semibold text-ink">How reading is moving</h2>
+              <div className="bg-[#1E1B4B] border border-white/5 p-5 rounded-2xl text-center">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#A855F7]">Speed</p>
+                <p className="text-3xl font-black text-white mt-2">{profile.avg_speed_wpm}</p>
+              </div>
+              <div className="bg-[#1E1B4B] border border-white/5 p-5 rounded-2xl text-center">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#43E97B]">Sessions</p>
+                <p className="text-3xl font-black text-white mt-2">{profile.total_sessions}</p>
+              </div>
+              <div className="bg-[#1E1B4B] border border-white/5 p-5 rounded-2xl text-center">
+                <p className="text-xs font-bold uppercase tracking-wider text-rose-400">Read Time</p>
+                <p className="text-3xl font-black text-white mt-2">{Math.floor(profile.total_minutes_read / 60)}h</p>
+              </div>
             </div>
-            <div className="rounded-full border border-sky-100 bg-white px-4 py-2 text-sm font-medium text-slate-500 shadow-sm">
-              Last {progress?.entries.length ?? 0} sessions
-            </div>
           </div>
-          <div className="mt-6">
-            {progress?.entries ? (
-              <ProgressChart data={progress.entries} />
-            ) : (
-              <div className="h-56 animate-pulse rounded-[1.6rem] bg-sky-50" />
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[0.8fr,1.2fr]">
-        <div className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-          <h2 className="text-lg font-semibold text-ink">Difficult words</h2>
-          <p className="mt-2 text-sm text-slate-500">
-            These words help Readable decide when phonics, pacing, or whisper support should show up.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {challengeWords.length > 0 ? (
-              challengeWords.map((word) => (
-                <span
-                  key={word}
-                  className="rounded-full bg-[#eef6ff] px-3 py-2 text-sm font-semibold text-sea"
-                >
-                  {word}
-                </span>
-              ))
-            ) : (
-              <span className="text-sm text-slate-500">No difficult words recorded yet.</span>
-            )}
-          </div>
-        </div>
-
-        <div className="rounded-[2.5rem] border border-white/80 bg-white/80 p-8 shadow-soft backdrop-blur">
-          <h2 className="text-lg font-semibold text-ink">Recent sessions</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
-              <thead className="text-slate-500">
-                <tr>
-                  <th className="pb-3">Type</th>
-                  <th className="pb-3">Started</th>
-                  <th className="pb-3">Accuracy</th>
-                  <th className="pb-3">Speed</th>
-                  <th className="pb-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-sky-50">
-                {(profile?.recent_sessions ?? []).map((session) => (
-                  <tr key={session.session_id}>
-                    <td className="py-3 capitalize text-ink">{session.session_type}</td>
-                    <td className="py-3 text-slate-600">{formatSessionDate(session.started_at)}</td>
-                    <td className="py-3 text-slate-600">
-                      {session.accuracy_pct !== null ? `${session.accuracy_pct}%` : "--"}
-                    </td>
-                    <td className="py-3 text-slate-600">
-                      {session.speed_wpm !== null ? `${session.speed_wpm} WPM` : "--"}
-                    </td>
-                    <td className="py-3 text-slate-600">{session.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </motion.div>
   );
 };

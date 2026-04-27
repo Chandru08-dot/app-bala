@@ -1,1 +1,0 @@
-"""Readable backend application package."""

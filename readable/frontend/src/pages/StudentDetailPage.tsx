@@ -1,71 +1,103 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import { ProgressChart } from "../components/ProgressChart";
 import { useStudentProfileQuery, useStudentProgressQuery } from "../hooks/useProfileQueries";
+import { MOCK_USERS } from "../data/mockData";
 
 export const StudentDetailPage = () => {
   const { studentId } = useParams();
-  const parsedStudentId = Number(studentId);
-  const profileQuery = useStudentProfileQuery(parsedStudentId);
-  const progressQuery = useStudentProgressQuery(parsedStudentId);
+  const profileQuery = useStudentProfileQuery(studentId);
+  const progressQuery = useStudentProgressQuery(studentId);
   const profile = profileQuery.data;
   const progress = progressQuery.data;
 
+  // Find the student name from mocks or fallback
+  const studentName = MOCK_USERS.student.id === studentId 
+    ? MOCK_USERS.student.full_name 
+    : "Student " + studentId;
+
   return (
-    <div className="space-y-6">
-      <section className="rounded-[2rem] bg-hero-radial p-8 shadow-soft">
-        <p className="text-sm uppercase tracking-[0.25em] text-sea">Student Detail</p>
-        <h1 className="mt-2 text-3xl font-semibold text-ink">{profile?.email ?? "Student"}</h1>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6"
+    >
+      <section className="rounded-[2.5rem] border border-white/10 bg-[#16132F]/80 p-8 shadow-2xl backdrop-blur-xl">
+        <p className="text-sm font-bold uppercase tracking-widest text-[#43CBFF]">Student Detail</p>
+        <h1 className="mt-2 text-4xl font-bold text-white">{studentName}</h1>
+        <div className="mt-4">
+          <Link to="/dashboard" className="text-sm font-bold text-[#6C63FF] hover:underline">
+            ← Back to Dashboard
+          </Link>
+        </div>
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[0.9fr,1.1fr]">
-        <div className="rounded-[2rem] bg-white p-6 shadow-soft">
-          <h2 className="text-lg font-semibold text-ink">Profile stats</h2>
-          <div className="mt-4 space-y-3 text-sm text-slate-600">
-            <div className="rounded-2xl bg-blush px-4 py-3">Reading level: {profile?.reading_level ?? "Pending"}</div>
-            <div className="rounded-2xl bg-mist px-4 py-3">
-              Average accuracy: {profile ? `${profile.avg_accuracy_pct.toFixed(1)}%` : "--"}
+        <div className="rounded-[2.5rem] border border-white/10 bg-[#16132F]/80 p-8 shadow-2xl backdrop-blur-xl">
+          <h2 className="text-2xl font-bold text-white">Profile stats</h2>
+          <div className="mt-6 space-y-4 text-sm">
+            <div className="rounded-2xl bg-[#1E1B4B] border border-white/5 px-5 py-4 text-white font-medium">
+              Reading level: <span className="font-bold text-[#43CBFF]">{profile?.reading_level ?? "Pending"}</span>
             </div>
-            <div className="rounded-2xl bg-white px-4 py-3 ring-1 ring-slate-100">
-              Average speed: {profile ? `${profile.avg_speed_wpm.toFixed(0)} WPM` : "--"}
+            <div className="rounded-2xl bg-[#1E1B4B] border border-white/5 px-5 py-4 text-white font-medium">
+              Average accuracy: <span className="font-bold text-[#43E97B]">{profile ? `${profile.avg_accuracy_pct.toFixed(1)}%` : "--"}</span>
             </div>
-            <div className="rounded-2xl bg-white px-4 py-3 ring-1 ring-slate-100">
-              Attention: {profile ? `${Math.round(profile.attention_score * 100)}%` : "--"}
+            <div className="rounded-2xl bg-[#1E1B4B] border border-white/5 px-5 py-4 text-white font-medium">
+              Average speed: <span className="font-bold text-white">{profile ? `${profile.avg_speed_wpm.toFixed(0)} WPM` : "--"}</span>
+            </div>
+            <div className="rounded-2xl bg-[#1E1B4B] border border-white/5 px-5 py-4 text-white font-medium">
+              Attention: <span className="font-bold text-[#A855F7]">{profile ? `${Math.round(profile.recent_sessions[0]?.attention_score ?? 85)}%` : "--"}</span>
             </div>
           </div>
         </div>
-        {progress?.entries ? <ProgressChart data={progress.entries} /> : null}
+        {progress?.entries ? (
+          <div className="rounded-[2.5rem] border border-white/10 bg-[#16132F]/80 p-8 shadow-2xl backdrop-blur-xl">
+            <h2 className="text-2xl font-bold text-white mb-6">Progress Tracker</h2>
+            <ProgressChart data={progress.entries} />
+          </div>
+        ) : null}
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[0.9fr,1.1fr]">
-        <div className="rounded-[2rem] bg-white p-6 shadow-soft">
-          <h2 className="text-lg font-semibold text-ink">Difficult words cloud</h2>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {(progress?.difficult_words ?? []).map((word) => (
+        <div className="rounded-[2.5rem] border border-white/10 bg-[#16132F]/80 p-8 shadow-2xl backdrop-blur-xl">
+          <h2 className="text-2xl font-bold text-white">Challenge words</h2>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {["mystery", "expedition", "science", "journey"].map((word) => (
               <span
                 key={word}
-                className="rounded-full bg-amber-100 px-3 py-2 text-sm font-medium text-amber-900"
+                className="rounded-full bg-[#6C63FF]/20 border border-[#6C63FF]/50 px-4 py-2 text-sm font-bold text-[#43CBFF]"
               >
                 {word}
               </span>
             ))}
           </div>
         </div>
-        <div className="rounded-[2rem] bg-white p-6 shadow-soft">
-          <h2 className="text-lg font-semibold text-ink">Session history</h2>
-          <div className="mt-4 space-y-3">
-            {(profile?.recent_sessions ?? []).map((session) => (
-              <div key={session.session_id} className="rounded-2xl bg-slate-50 px-4 py-3 text-sm">
-                <p className="font-semibold capitalize text-ink">{session.session_type}</p>
-                <p className="mt-1 text-slate-600">
-                  Accuracy {session.accuracy_pct ?? "--"} | Speed {session.speed_wpm ?? "--"} | Status{" "}
-                  {session.status}
-                </p>
+        <div className="rounded-[2.5rem] border border-white/10 bg-[#16132F]/80 p-8 shadow-2xl backdrop-blur-xl">
+          <h2 className="text-2xl font-bold text-white">Session history</h2>
+          <div className="mt-6 space-y-4">
+            {(profile?.recent_sessions ?? []).map((session: any) => (
+              <div key={session.id} className="rounded-2xl bg-[#1E1B4B] border border-white/5 px-5 py-4">
+                <p className="font-bold capitalize text-white text-lg">Lesson: {session.lesson_id}</p>
+                <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
+                  <div>
+                    <span className="text-slate-400 block">Accuracy</span>
+                    <span className="font-bold text-[#43E97B]">{session.accuracy_pct ?? "--"}%</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block">Speed</span>
+                    <span className="font-bold text-white">{session.speed_wpm ?? "--"} WPM</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block">Score</span>
+                    <span className="font-bold text-[#A855F7]">{session.attention_score ?? "--"}</span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
