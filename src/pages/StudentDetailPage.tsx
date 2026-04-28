@@ -1,113 +1,118 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { 
-  ChevronLeft, Zap, Clock, Brain, AlertCircle, TrendingUp, ChevronRight, FileText 
-} from "lucide-react";
-import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
-} from "recharts";
-import { MOCK_STUDENTS_LIST } from "../data/mockData";
+import { User, Activity, Zap, Target, BookOpen, Clock, ArrowLeft } from "lucide-react";
+import { MOCK_STUDENTS, MOCK_SESSIONS } from "../data/mockData";
 
 export const StudentDetailPage = () => {
   const { id } = useParams();
-  const student = MOCK_STUDENTS_LIST.find(s => s.id === id) || MOCK_STUDENTS_LIST[0];
-
-  const chartData = student.trend.map((val, i) => ({ day: `Day ${i+1}`, accuracy: val }));
+  const student = MOCK_STUDENTS.find(s => s.student_id === id) || MOCK_STUDENTS[0];
 
   return (
-    <div className="flex flex-col gap-8 p-6 pt-12 pb-32 min-h-screen bg-[#0D0B1E]">
-      <header className="flex items-center gap-4">
-        <Link to="/teacher" className="p-3 rounded-full bg-white/5 border border-white/10 text-white">
-          <ChevronLeft className="w-5 h-5" />
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center gap-4">
+        <Link to="/teacher" className="p-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
+          <ArrowLeft className="w-5 h-5 text-slate-600" />
         </Link>
         <div>
-          <h1 className="text-3xl font-black text-white">{student.name}</h1>
-          <p className="text-slate-400 font-bold">Explorer ID: {student.id}</p>
-        </div>
-      </header>
-
-      {/* Hero Stats */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#16132F] rounded-[2rem] p-6 border border-white/5">
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Longest Streak</p>
-          <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-yellow-400" />
-            <p className="text-2xl font-black text-white">14 Days</p>
-          </div>
-        </div>
-        <div className="bg-[#16132F] rounded-[2rem] p-6 border border-white/5">
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Total Time</p>
-          <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-[#43CBFF]" />
-            <p className="text-2xl font-black text-white">12.5h</p>
-          </div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+            {student.name}
+          </h1>
+          <p className="text-slate-500 font-bold mt-1">Explorer ID: {student.student_id}</p>
         </div>
       </div>
 
-      {/* Accuracy Trend Chart */}
-      <section className="bg-[#16132F] rounded-[2.5rem] p-8 border border-white/5">
-        <div className="flex items-center justify-between mb-8">
-          <h3 className="text-lg font-black text-white">Accuracy Trend</h3>
-          <TrendingUp className="w-5 h-5 text-[#43E97B]" />
+      {/* Metrics Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="card p-6 border-l-4 border-emerald-500 flex flex-col justify-center bg-emerald-50/30">
+          <Activity className="w-6 h-6 text-emerald-500 mb-2" />
+          <h3 className="text-2xl font-black text-slate-900">{student.avg_accuracy_pct}%</h3>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Avg Accuracy</p>
         </div>
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-              <XAxis dataKey="day" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
-              <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#16132F', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' }}
-                itemStyle={{ color: '#43CBFF', fontWeight: 900 }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="accuracy" 
-                stroke="#6C63FF" 
-                strokeWidth={4} 
-                dot={{ fill: '#6C63FF', r: 6 }} 
-                activeDot={{ r: 8, stroke: '#fff', strokeWidth: 2 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="card p-6 border-l-4 border-amber-500 flex flex-col justify-center bg-amber-50/30">
+          <Zap className="w-6 h-6 text-amber-500 mb-2" />
+          <h3 className="text-2xl font-black text-slate-900">{student.avg_speed_wpm}</h3>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Speed (WPM)</p>
         </div>
-      </section>
+        <div className="card p-6 border-l-4 border-indigo-500 flex flex-col justify-center bg-indigo-50/30">
+          <Target className="w-6 h-6 text-indigo-500 mb-2" />
+          <h3 className="text-2xl font-black text-slate-900">{student.reading_level}</h3>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Reading Level</p>
+        </div>
+        <div className="card p-6 border-l-4 border-sky-500 flex flex-col justify-center bg-sky-50/30">
+          <Clock className="w-6 h-6 text-sky-500 mb-2" />
+          <h3 className="text-2xl font-black text-slate-900">{student.attention_score}</h3>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Focus Score</p>
+        </div>
+      </div>
 
-      {/* Phonetic Challenges */}
-      <section className="bg-[#16132F] rounded-[2.5rem] p-8 border border-white/5">
-        <h3 className="text-lg font-black text-white mb-6">Phonetic Challenges</h3>
-        <div className="space-y-4">
-          {[
-            { phoneme: "/th/", status: "Critical", color: "rose-500" },
-            { phoneme: "/oo/", status: "Emerging", color: "yellow-400" },
-            { phoneme: "/st/", status: "Mastered", color: "43E97B" },
-          ].map((item) => (
-            <div key={item.phoneme} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center font-black text-white">
-                  {item.phoneme}
-                </div>
-                <span className="text-sm font-bold text-slate-300">Target Sound</span>
-              </div>
-              <span className={`text-[10px] font-black uppercase px-2 py-1 rounded bg-${item.color}/10 text-${item.color}`}>
-                {item.status}
-              </span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Difficult Words & Progress */}
+        <div className="lg:col-span-1 space-y-8">
+          <div className="card p-6">
+            <h2 className="text-lg font-black text-slate-900 mb-4 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-rose-500" />
+              Focus Words
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {student.difficult_words?.map(word => (
+                <span key={word} className="px-3 py-1.5 bg-rose-50 text-rose-700 font-bold text-sm rounded-lg border border-rose-100">
+                  {word}
+                </span>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+            <p className="text-xs text-slate-500 font-medium mt-4">These words had a high fixation duration in recent quests.</p>
+          </div>
 
-      {/* AI Recommendation */}
-      <section className="bg-[linear-gradient(135deg,#6C63FF_0%,#43CBFF_100%)] rounded-[2.5rem] p-8 text-white relative overflow-hidden">
-        <div className="flex items-center gap-4 mb-4">
-          <Brain className="w-6 h-6" />
-          <h3 className="font-black uppercase tracking-tight">AI Teaching Strategy</h3>
+          <div className="card p-6">
+            <h2 className="text-lg font-black text-slate-900 mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-indigo-500" />
+              Growth Chart
+            </h2>
+            <div className="h-48 flex items-end justify-between gap-1 pb-2">
+              {[60, 65, 62, 70, 75, 78, 80, 85].map((height, i) => (
+                <div key={i} className="w-full flex flex-col items-center gap-1">
+                  <div 
+                    className="w-full bg-indigo-200 rounded-t-sm"
+                    style={{ height: `${height}%` }}
+                  ></div>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Last 8 Sessions</p>
+          </div>
         </div>
-        <p className="font-bold opacity-90 leading-relaxed">
-          Switch {student.name.split(' ')[0]} to "Nebula High-Contrast" theme and increase word spacing. Prioritize multi-syllabic stories next week.
-        </p>
-      </section>
+
+        {/* Session Log */}
+        <div className="lg:col-span-2">
+          <div className="card p-6 h-full">
+            <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-slate-500" />
+              Session Log
+            </h2>
+            
+            <div className="space-y-4">
+              {MOCK_SESSIONS.map(session => (
+                <div key={session.session_id} className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-indigo-200 transition-colors">
+                  <div>
+                    <h4 className="font-bold text-slate-900">{session.session_type}</h4>
+                    <p className="text-xs font-bold text-slate-500 mt-1">{new Date(session.started_at).toLocaleString()}</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="text-center bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-100">
+                      <p className="text-sm font-black text-emerald-600">{session.accuracy_pct}%</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Accuracy</p>
+                    </div>
+                    <div className="text-center bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-100">
+                      <p className="text-sm font-black text-amber-600">{session.speed_wpm}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">WPM</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

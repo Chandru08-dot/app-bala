@@ -1,118 +1,79 @@
-import { useEffect } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { ProtectedRoute } from "./components/ProtectedRoute";
-import { DashboardPage } from "./pages/DashboardPage";
-import { DiagnosticPage } from "./pages/DiagnosticPage";
-import { LessonPage } from "./pages/LessonPage";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
-import { StudentDetailPage } from "./pages/StudentDetailPage";
-import { UploadPage } from "./pages/UploadPage";
-import { BottomNav } from "./components/BottomNav";
-import { SolarSystemPage } from "./pages/SolarSystemPage";
-import { AchievementsPage } from "./pages/AchievementsPage";
-import { ShopPage } from "./pages/ShopPage";
-import { LeaderboardPage } from "./pages/LeaderboardPage";
-import { MissionControlPage } from "./pages/MissionControlPage";
-import { PhonemeTrainingPage } from "./pages/PhonemeTrainingPage";
-import { GamesHubPage } from "./pages/GamesHubPage";
-import { CommunityPage } from "./pages/CommunityPage";
-import { InboxPage } from "./pages/InboxPage";
-import { FlashcardPage } from "./pages/FlashcardPage";
-import { VocabularyGardenPage } from "./pages/VocabularyGardenPage";
-import { ReadingCertificatesPage } from "./pages/ReadingCertificatesPage";
-import { ParentDashboardPage } from "./pages/ParentDashboardPage";
+import { StudentDashboardPage } from "./pages/StudentDashboardPage";
 import { TeacherDashboardPage } from "./pages/TeacherDashboardPage";
-import { CosmicBackground } from "./components/CosmicBackground";
-import { DyslexiaToolbar } from "./components/DyslexiaToolbar";
-import { useSettings } from "./stores/settingsStore";
-import { HallOfFamePage } from "./pages/HallOfFamePage";
+import { ParentDashboardPage } from "./pages/ParentDashboardPage";
+import { ProgressPage } from "./pages/ProgressPage";
+import { DiagnosticPage } from "./pages/DiagnosticPage";
+import { LessonWorkshopPage } from "./pages/LessonWorkshopPage";
+import { ReadingLessonPage } from "./pages/ReadingLessonPage";
+import { ReaderPage } from "./pages/ReaderPage";
+import { PlanetLessonPage } from "./pages/PlanetLessonPage";
+import { StudentDetailPage } from "./pages/StudentDetailPage";
+import { ImageGalleryPage } from "./pages/ImageGalleryPage";
+import { BottomNav } from "./components/BottomNav";
 
 const AppShell = () => {
+  // Temporary auth state for demo
+  const [role, setRole] = useState<string>("student");
   const location = useLocation();
-  const isLessonRoute = location.pathname.startsWith("/lesson/");
-  const { fontFamily, letterSpacing, lineHeight } = useSettings();
 
-  useEffect(() => {
-    // Mobile Voice Engine Warmup
-    const unlockAudio = () => {
-      const utterance = new SpeechSynthesisUtterance("");
-      utterance.volume = 0;
-      window.speechSynthesis.speak(utterance);
-      window.removeEventListener('click', unlockAudio);
-      console.log("Audio Engine Unlocked for Mobile");
-    };
-    window.addEventListener('click', unlockAudio);
-    return () => window.removeEventListener('click', unlockAudio);
-  }, []);
+  // Show shell for all non-auth routes
+  const isAuthPage = location.pathname === "/" || location.pathname === "/register";
+  // Full screen pages that shouldn't show the bottom nav
+  const isFullScreenPage = location.pathname.includes("/diagnostic") || location.pathname.includes("/planets") || location.pathname.includes("/reader") || location.pathname.includes("/lesson/");
 
   return (
-    <div 
-      className={`flex min-h-screen justify-center transition-all duration-300 ${fontFamily === 'OpenDyslexic' ? 'dyslexia-mode' : ''}`}
-      style={{ 
-        letterSpacing: `${letterSpacing}px`,
-        lineHeight: lineHeight
-      }}
-    >
-      <CosmicBackground />
-      <DyslexiaToolbar />
-      {/* Mobile Frame Container */}
-      <div className="relative flex min-h-screen w-full max-w-[450px] flex-col overflow-hidden bg-[#0D0B1E]/90 shadow-[0_0_100px_rgba(0,0,0,0.5)] z-10">
-        <main className={`flex-1 ${!isLessonRoute ? "pb-24" : ""}`}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="min-h-full"
-            >
-              <Routes location={location}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/expedition" element={<SolarSystemPage />} />
-                <Route path="/achievements" element={<AchievementsPage />} />
-                <Route path="/shop" element={<ShopPage />} />
-                <Route path="/leaderboard" element={<LeaderboardPage />} />
-                <Route path="/telemetry" element={<MissionControlPage />} />
-                <Route path="/training" element={<PhonemeTrainingPage />} />
-                <Route path="/games" element={<GamesHubPage />} />
-                <Route path="/community" element={<CommunityPage />} />
-                <Route path="/inbox" element={<InboxPage />} />
-                <Route path="/flashcards" element={<FlashcardPage />} />
-                <Route path="/fame" element={<HallOfFamePage />} />
-                <Route path="/certificates" element={<ReadingCertificatesPage />} />
-                <Route path="/parent" element={<ParentDashboardPage />} />
-                <Route path="/teacher" element={<TeacherDashboardPage />} />
-                <Route path="/diagnostic" element={<DiagnosticPage />} />
-                <Route path="/upload" element={<UploadPage />} />
-                <Route path="/upload-new" element={<UploadPage />} />
-                <Route path="/lesson/:lessonId" element={<LessonPage />} />
-                <Route path="/students/:studentId" element={<StudentDetailPage />} />
-                <Route path="/quests" element={<DashboardPage />} />
-                <Route path="/profile" element={<DashboardPage />} />
-                <Route path="/settings" element={<DashboardPage />} />
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </motion.div>
-          </AnimatePresence>
-        </main>
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-0 sm:p-4">
+      {/* Mobile Frame Constraint */}
+      <div className="w-full mobile-frame">
         
-        {!isLessonRoute && <BottomNav />}
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto hide-scrollbar w-full pb-24 relative">
+          
+          {/* Development Helper - Role Switcher */}
+          {!isAuthPage && (
+            <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-1 rounded-2xl shadow-sm border border-white flex gap-1 z-[100]">
+              {["student", "teacher", "parent"].map(r => (
+                <button 
+                  key={r} 
+                  onClick={() => setRole(r)}
+                  className={`w-8 h-8 flex items-center justify-center text-xs font-black rounded-xl uppercase transition-colors ${role === r ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:bg-slate-100'}`}
+                >
+                  {r.charAt(0)}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/student" element={<StudentDashboardPage />} />
+            <Route path="/teacher" element={<TeacherDashboardPage />} />
+            <Route path="/parent" element={<ParentDashboardPage />} />
+            <Route path="/progress" element={<ProgressPage />} />
+            <Route path="/diagnostic" element={<DiagnosticPage />} />
+            <Route path="/workshop" element={<LessonWorkshopPage />} />
+            <Route path="/lesson/:id" element={<ReadingLessonPage />} />
+            <Route path="/reader" element={<ReaderPage />} />
+            <Route path="/planets" element={<PlanetLessonPage />} />
+            <Route path="/student/:id" element={<StudentDetailPage />} />
+            <Route path="/gallery" element={<ImageGalleryPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+
+        {/* Bottom Navigation */}
+        {!isAuthPage && !isFullScreenPage && <BottomNav role={role} />}
       </div>
     </div>
   );
 };
 
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/*" element={<AppShell />} />
-      </Route>
-    </Routes>
-  );
+  return <AppShell />;
 }

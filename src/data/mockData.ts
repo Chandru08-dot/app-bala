@@ -1,138 +1,112 @@
-// Massive Mock Data for God Mode UI
-
-export const MOCK_USERS = {
+export const MOCK_USER = {
   student: {
-    id: "student-1",
-    email: "student@test.com",
-    role: "student" as const,
-    full_name: "Alex Johnson",
-    level: 12,
-    xp: 4500,
-    nextLevelXp: 5000,
-    created_at: new Date().toISOString(),
+    student_id: "STU-001",
+    name: "Alex Johnson",
+    email: "alex@example.com",
+    role: "student",
+    reading_level: "Level 4",
+    avg_speed_wpm: 125,
+    avg_accuracy_pct: 92,
+    attention_score: 88,
+    difficult_words: ["Through", "Thought", "Bough"],
+    recent_sessions: 14
   },
   teacher: {
-    id: "teacher-1",
-    email: "teacher@test.com",
-    role: "teacher" as const,
-    full_name: "Mrs. Smith",
-    created_at: new Date().toISOString(),
+    teacher_id: "TCH-001",
+    name: "Mrs. Sarah Davis",
+    email: "teacher@example.com",
+    role: "teacher"
   },
+  parent: {
+    parent_id: "PAR-001",
+    name: "David Johnson",
+    email: "parent@example.com",
+    role: "parent",
+    children: ["STU-001"]
+  }
 };
 
-export const MOCK_TEACHER_ALERTS = [
-  { id: 1, type: "warning", message: "Alex hesitated on 'volcano' 3 times.", time: "10 mins ago" },
-  { id: 2, type: "success", message: "Emma achieved a new fluency record (160 WPM).", time: "1 hour ago" },
-  { id: 3, type: "info", message: "Marcus completed his daily reading quest.", time: "2 hours ago" },
-  { id: 4, type: "warning", message: "Sarah's attention dropped below 60% in Lesson 4.", time: "3 hours ago" },
-  { id: 5, type: "success", message: "Class average accuracy improved by 4% this week.", time: "1 day ago" },
-];
-
-export const MOCK_CLASS_RADAR = [
-  { subject: "Phonics", A: 85, fullMark: 100 },
-  { subject: "Fluency", A: 78, fullMark: 100 },
-  { subject: "Comprehension", A: 92, fullMark: 100 },
-  { subject: "Vocabulary", A: 88, fullMark: 100 },
-  { subject: "Focus", A: 75, fullMark: 100 },
-];
-
-export const MOCK_STUDENTS_LIST = [
-  { id: "student-1", name: "Alex Johnson", accuracy: 88, wpm: 120, level: 12, trend: [65, 70, 75, 82, 85, 84, 88] },
-  { id: "student-2", name: "Emma Davis", accuracy: 95, wpm: 160, level: 15, trend: [90, 92, 91, 94, 93, 95, 95] },
-  { id: "student-3", name: "Marcus Chen", accuracy: 75, wpm: 85, level: 8, trend: [60, 62, 65, 64, 68, 72, 75] },
-  { id: "student-4", name: "Sarah Williams", accuracy: 82, wpm: 105, level: 10, trend: [80, 81, 79, 83, 80, 81, 82] },
-  { id: "student-5", name: "Leo Martinez", accuracy: 91, wpm: 135, level: 14, trend: [85, 88, 89, 90, 88, 90, 91] },
-];
-
-export const MOCK_STUDENT_QUESTS = [
-  { id: 1, title: "Speed Reader", description: "Read at > 130 WPM", progress: 120, total: 130, reward: "50 XP" },
-  { id: 2, title: "Eagle Eye", description: "Achieve 90% accuracy", progress: 88, total: 90, reward: "100 XP" },
-  { id: 3, title: "Bookworm", description: "Complete 3 lessons", progress: 2, total: 3, reward: "150 XP" },
-];
-
-export const MOCK_STUDENT_PROFILE = {
-  id: "profile-1",
-  student_id: "student-1",
-  reading_level: 3,
-  interests: ["animals", "space", "adventure"],
-  dyslexia_type: "phonological",
-  visual_preferences: {
-    font_size: "large",
-    background_color: "#FEF9C3",
-    line_spacing: "wide",
+export const MOCK_STUDENTS = [
+  MOCK_USER.student,
+  {
+    student_id: "STU-002",
+    name: "Mia Patel",
+    email: "mia@example.com",
+    reading_level: "Level 5",
+    avg_speed_wpm: 140,
+    avg_accuracy_pct: 95,
+    attention_score: 91,
+    difficult_words: ["Receive", "Believe"],
+    recent_sessions: 18
   },
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-  total_sessions: 12,
-  total_minutes_read: 145,
-  avg_accuracy_pct: 88,
-  avg_speed_wpm: 120,
-  current_streak: 4,
-  longest_streak: 7,
-  badges: ["first_session", "three_day_streak", "accuracy_80"],
-  recent_sessions: [
-    {
-      id: "session-1",
-      lesson_id: "lesson-1",
-      duration_seconds: 320,
-      words_read: 210,
-      accuracy_pct: 92,
-      speed_wpm: 125,
-      attention_score: 85,
-      completed_at: new Date().toISOString(),
-    },
-    {
-      id: "session-2",
-      lesson_id: "lesson-2",
-      duration_seconds: 400,
-      words_read: 250,
-      accuracy_pct: 86,
-      speed_wpm: 110,
-      attention_score: 80,
-      completed_at: new Date(Date.now() - 86400000).toISOString(),
-    },
-  ],
-};
+  {
+    student_id: "STU-003",
+    name: "Leo Garcia",
+    email: "leo@example.com",
+    reading_level: "Level 3",
+    avg_speed_wpm: 95,
+    avg_accuracy_pct: 82,
+    attention_score: 75,
+    difficult_words: ["Enough", "Tough", "Rough"],
+    recent_sessions: 8
+  }
+];
 
 export const MOCK_LESSONS = [
   {
-    id: "lesson-1",
-    title: "The Midnight Garden",
-    description: "A mysterious tale of a secret garden discovered at midnight.",
-    difficulty_level: 2,
-    content: "Tom discovered the hidden gate on the night of his grandmother's clock striking thirteen. Beyond the iron bars lay a garden drenched in silver moonlight. Roses climbed trellises in full bloom despite the winter chill. He pushed the gate and stepped onto the damp grass. A girl in an old-fashioned dress stood by the sundial. 'You can see me?' she whispered.",
-    category: "Story",
-    created_at: new Date().toISOString(),
-    completed: true,
+    lesson_id: "LES-001",
+    title: "The Great Barrier Reef",
+    preview_text: "The Great Barrier Reef is the world's largest coral reef system...",
+    support_focus: "Phonics: 'ee' and 'ea'",
+    segment_count: 5,
+    created_at: "2023-10-15T10:00:00Z"
   },
   {
-    id: "lesson-2",
-    title: "Volcanoes: Earth's Fury",
-    description: "Discover how volcanoes shape our planet.",
-    difficulty_level: 3,
-    content: "Beneath your feet, Earth is alive. The mantle flows slowly over millions of years, carrying tectonic plates with it. Where plates pull apart or collide, magma finds pathways to the surface. This is how volcanoes are born. Magma chambers can hold cubic kilometres of molten rock under enormous pressure.",
-    category: "Science",
-    created_at: new Date().toISOString(),
-    completed: false,
+    lesson_id: "LES-002",
+    title: "Solar System Journey",
+    preview_text: "Our solar system consists of our star, the Sun, and everything bound to it by gravity...",
+    support_focus: "Vocabulary: Planets and Space",
+    segment_count: 8,
+    created_at: "2023-10-18T14:30:00Z"
+  }
+];
+
+export const MOCK_SESSIONS = [
+  {
+    session_id: "SESS-101",
+    session_type: "Reading Practice",
+    status: "Completed",
+    started_at: "2023-10-24T09:00:00Z",
+    ended_at: "2023-10-24T09:15:00Z",
+    accuracy_pct: 94,
+    speed_wpm: 128
   },
   {
-    id: "lesson-3",
-    title: "The First Moon Landing",
-    description: "Relive the incredible journey of Apollo 11.",
-    difficulty_level: 3,
-    content: "On the morning of 16 July 1969, a Saturn V rocket ignited its engines and lifted Apollo 11 away from Earth. Inside the capsule sat Neil Armstrong, Buzz Aldrin, and Michael Collins. Their mission: land on the Moon and return safely. No human had attempted it before.",
-    category: "History",
-    created_at: new Date().toISOString(),
-    completed: false,
+    session_id: "SESS-102",
+    session_type: "Diagnostic Quest",
+    status: "Completed",
+    started_at: "2023-10-23T14:00:00Z",
+    ended_at: "2023-10-23T14:10:00Z",
+    accuracy_pct: 89,
+    speed_wpm: 115
+  }
+];
+
+export const MOCK_OCR_PREVIEW = `THE SOLAR SYSTEM
+
+Our solar system is home to eight amazing planets. They all orbit around a giant star we call the Sun. Mercury is the closest planet to the Sun, and it gets very hot! Venus is covered in thick clouds. Earth is our home, and it has liquid water. Mars is known as the Red Planet because of its rusty dust. Jupiter is the largest planet, followed by Saturn with its beautiful rings. Uranus and Neptune are the cold ice giants far away.`;
+
+export const MOCK_PERSONALIZED_OUTPUTS = [
+  {
+    student_id: "STU-001",
+    student_name: "Alex Johnson",
+    reading_level: "Level 4",
+    content: "Our solar system has eight planets. They go around the Sun. Earth is our home. Mars is the Red Planet. Jupiter is the biggest."
   },
   {
-    id: "lesson-4",
-    title: "Deep Sea Wonders",
-    description: "Explore the dark and glowing creatures of the abyss.",
-    difficulty_level: 4,
-    content: "Sunlight barely penetrates the twilight zone of the ocean. Below it lies the midnight zone, a realm of perpetual darkness. Yet, life thrives here. Anglerfish lure prey with glowing appendages, while giant squid hunt in the freezing depths. Many creatures create their own light through bioluminescence, turning the deep sea into a galaxy of tiny stars.",
-    category: "Science",
-    created_at: new Date().toISOString(),
-    completed: false,
+    student_id: "STU-003",
+    student_name: "Leo Garcia",
+    reading_level: "Level 3",
+    content: "There are 8 planets. The Sun is in the middle. We live on Earth. Mars is red. Jupiter is very big."
   }
 ];

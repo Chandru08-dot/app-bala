@@ -1,76 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.cdnfonts.com/css/open-dyslexic');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-bg-dark: #0D0B1E;
-  --color-bg-card: #16132F;
-  --color-primary: #6C63FF;
-  --color-secondary: #43CBFF;
-  --color-accent: #A855F7;
-  --color-text: #FFFFFF;
-  --color-text-muted: #94A3B8;
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-900 antialiased font-['Nunito',sans-serif] selection:bg-amber-100 selection:text-amber-900 overflow-hidden;
+  }
+}
+
+@layer components {
+  /* Premium Glass Button */
+  .btn-primary {
+    @apply px-6 py-4 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-black rounded-[1.5rem] shadow-[0_8px_30px_rgb(99,102,241,0.4)] hover:shadow-[0_8px_40px_rgb(99,102,241,0.6)] active:scale-95 transition-all focus:outline-none disabled:opacity-50 border border-indigo-400/50 backdrop-blur-md;
+  }
   
-  color: var(--color-text);
-  background-color: #020617; /* Deepest blue for desktop background */
-  font-family: 'Inter', sans-serif;
+  .btn-secondary {
+    @apply px-6 py-4 bg-white/80 backdrop-blur-md text-slate-700 font-black border-2 border-white rounded-[1.5rem] shadow-sm hover:bg-white active:scale-95 transition-all focus:outline-none disabled:opacity-50;
+  }
+
+  /* Ultra-Premium Glass Card */
+  .card {
+    @apply bg-white/80 backdrop-blur-xl rounded-[2rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden;
+  }
+  
+  .card-glass {
+    @apply bg-white/40 backdrop-blur-2xl rounded-[2rem] border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full px-5 py-4 bg-white/60 backdrop-blur-md border-2 border-white rounded-[1.5rem] font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all shadow-inner;
+  }
+
+  .badge {
+    @apply px-3 py-1 bg-white/80 backdrop-blur-md border border-white/50 text-slate-600 font-black text-[10px] uppercase tracking-widest rounded-full shadow-sm;
+  }
 }
 
-.dyslexia-mode {
-  font-family: 'Lexend', sans-serif !important;
-  word-spacing: 0.12em !important;
-  line-height: 1.8 !important;
+.dyslexia-font {
+  font-family: 'OpenDyslexic', sans-serif !important;
 }
 
-h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: 'Outfit', sans-serif;
+/* Hide Scrollbar for mobile feel */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.dyslexia-mode h1, 
-.dyslexia-mode h2, 
-.dyslexia-mode h3, 
-.dyslexia-mode h4, 
-.dyslexia-mode h5, 
-.dyslexia-mode h6 {
-  font-family: 'Lexend', sans-serif !important;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Custom Scrollbar for Mobile Container */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 4px;
-}
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: transparent;
-}
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-/* Glassmorphism Utilities */
-.glass {
-  background: rgba(22, 19, 47, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Cosmic Animation */
+/* Premium Animations */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
-
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+  pointer-events: none;
+}
+
+/* Phone Container Frame */
+.mobile-frame {
+  max-width: 430px;
+  margin: 0 auto;
+  height: 100dvh;
+  position: relative;
+  background-color: #f8fafc;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 450px) {
+  .mobile-frame {
+    height: 90vh;
+    margin-top: 5vh;
+    border-radius: 40px;
+    border: 8px solid #0f172a;
+  }
 }

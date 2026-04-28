@@ -1,35 +1,67 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Compass, Gamepad2, Trophy, Layers, Heart } from "lucide-react";
+import { Home, Settings, BookOpen, GalleryHorizontalEnd, LayoutDashboard, Heart } from "lucide-react";
+import { MOCK_USER } from "../data/mockData";
 
-export const BottomNav = () => {
+interface BottomNavProps {
+  role: string;
+}
+
+export const BottomNav = ({ role }: BottomNavProps) => {
   const location = useLocation();
 
-  const navItems = [
-    { icon: Compass, label: "Expedition", path: "/expedition" },
-    { icon: Gamepad2, label: "Games", path: "/games" },
-    { icon: Trophy, label: "Fame", path: "/fame" },
-    { icon: Layers, label: "Cards", path: "/flashcards" },
-    { icon: Heart, label: "Parent", path: "/parent" },
-  ];
+  const navLinks = {
+    student: [
+      { path: "/student", label: "Home", icon: Home },
+      { path: "/diagnostic", label: "Quests", icon: BookOpen },
+      { path: "/progress", label: "Stats", icon: Settings },
+      { path: "/gallery", label: "Gallery", icon: GalleryHorizontalEnd },
+    ],
+    teacher: [
+      { path: "/teacher", label: "Roster", icon: LayoutDashboard },
+      { path: "/workshop", label: "Lab", icon: BookOpen },
+      { path: "/gallery", label: "Gallery", icon: GalleryHorizontalEnd },
+    ],
+    parent: [
+      { path: "/parent", label: "Portal", icon: Heart },
+      { path: "/gallery", label: "Gallery", icon: GalleryHorizontalEnd },
+    ]
+  }[role as keyof typeof MOCK_USER] || [];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-20 items-center justify-around border-t border-white/5 bg-[#16132F]/80 px-4 pb-2 backdrop-blur-xl">
-      {navItems.map((item) => {
-        const isActive = location.pathname === item.path;
-        return (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`flex flex-col items-center gap-1 transition-colors ${
-              isActive ? "text-[#43CBFF]" : "text-slate-400 hover:text-white"
-            }`}
-          >
-            <item.icon className={`h-6 w-6 ${isActive ? "drop-shadow-[0_0_8px_rgba(67,203,255,0.5)]" : ""}`} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <div className="absolute bottom-0 w-full px-6 pb-6 pt-4 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent z-50 pointer-events-none">
+      <nav className="bg-white/80 backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.1)] h-16 rounded-[2rem] flex items-center justify-around px-2 pointer-events-auto">
+        {navLinks.map((link) => {
+          const Icon = link.icon;
+          const isActive = location.pathname.startsWith(link.path);
+          
+          return (
+            <Link
+              key={link.path}
+              to={link.path}
+              className="relative flex flex-col items-center justify-center w-16 h-full group"
+            >
+              {/* Active Indicator Pill */}
+              {isActive && (
+                <div className="absolute inset-y-2 inset-x-1 bg-indigo-50 rounded-2xl -z-10 animate-in zoom-in duration-300"></div>
+              )}
+              
+              <Icon 
+                className={`w-6 h-6 transition-all duration-300 ${
+                  isActive ? "text-indigo-600 scale-110" : "text-slate-400 group-hover:text-slate-600"
+                }`} 
+                strokeWidth={isActive ? 2.5 : 2}
+              />
+              
+              {isActive && (
+                <span className="text-[9px] font-black tracking-widest uppercase text-indigo-600 mt-1 animate-in fade-in slide-in-from-bottom-1">
+                  {link.label}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
   );
 };
