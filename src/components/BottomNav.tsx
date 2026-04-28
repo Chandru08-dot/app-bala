@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Settings, BookOpen, GalleryHorizontalEnd, LayoutDashboard, Heart } from "lucide-react";
+import { Home, Settings, BookOpen, GalleryHorizontalEnd, LayoutDashboard, Heart, Gamepad2 } from "lucide-react";
 import { MOCK_USER } from "../data/mockData";
 
 interface BottomNavProps {
@@ -15,7 +15,7 @@ export const BottomNav = ({ role }: BottomNavProps) => {
       { path: "/student", label: "Home", icon: Home },
       { path: "/diagnostic", label: "Quests", icon: BookOpen },
       { path: "/progress", label: "Stats", icon: Settings },
-      { path: "/gallery", label: "Gallery", icon: GalleryHorizontalEnd },
+      { path: "/games", label: "Games", icon: Gamepad2 },
     ],
     teacher: [
       { path: "/teacher", label: "Roster", icon: LayoutDashboard },

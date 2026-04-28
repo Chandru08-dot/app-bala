@@ -14,6 +14,8 @@ import { ReaderPage } from "./pages/ReaderPage";
 import { PlanetLessonPage } from "./pages/PlanetLessonPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { ImageGalleryPage } from "./pages/ImageGalleryPage";
+import { GamesHubPage } from "./pages/GamesHubPage";
+import { GamePlayerPage } from "./pages/GamePlayerPage";
 import { BottomNav } from "./components/BottomNav";
 
 const AppShell = () => {
@@ -24,7 +26,7 @@ const AppShell = () => {
   // Show shell for all non-auth routes
   const isAuthPage = location.pathname === "/" || location.pathname === "/register";
   // Full screen pages that shouldn't show the bottom nav
-  const isFullScreenPage = location.pathname.includes("/diagnostic") || location.pathname.includes("/planets") || location.pathname.includes("/reader") || location.pathname.includes("/lesson/");
+  const isFullScreenPage = location.pathname.includes("/diagnostic") || location.pathname.includes("/planets") || location.pathname.includes("/reader") || location.pathname.includes("/lesson/") || location.pathname.includes("/play/");
 
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-0 sm:p-4">
@@ -63,6 +65,8 @@ const AppShell = () => {
             <Route path="/planets" element={<PlanetLessonPage />} />
             <Route path="/student/:id" element={<StudentDetailPage />} />
             <Route path="/gallery" element={<ImageGalleryPage />} />
+            <Route path="/games" element={<GamesHubPage />} />
+            <Route path="/play/:gameId" element={<GamePlayerPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

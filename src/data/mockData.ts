@@ -4,6 +4,7 @@ export const MOCK_USER = {
     name: "Alex Johnson",
     email: "alex@example.com",
     role: "student",
+    dyslexia_type: "Phonological", // Options: "Phonological", "Working Memory", "Visual"
     reading_level: "Level 4",
     avg_speed_wpm: 125,
     avg_accuracy_pct: 92,
